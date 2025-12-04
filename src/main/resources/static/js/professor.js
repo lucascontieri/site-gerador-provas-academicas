@@ -1,34 +1,38 @@
-//Seletor para os campos do formulário
+// =============================
+// Seletores para os campos do formulário
+// =============================
 const formProfessor = document.querySelector("#formProfessor");
 const idNomeProfessor = document.querySelector("#idNomeProfessor"); 
 const idEmailProfessor = document.querySelector("#idEmailProfessor");
 const idSenhaProfessor = document.querySelector("#idSenhaProfessor");
 const idMatriProfessor = document.querySelector("#idMatriProfessor"); 
-const tabelaBody = document.querySelector("#tableDisciplina tbody");  // <tbody> da tabela disciplina
+const tabelaBody = document.querySelector("#tableDisciplina tbody"); 
 
-//Função principal para salvar o professor via API
+// =============================
+// Salvar Professor
+// =============================
 function salvarProfessor() {
-    //Validação simples de campos vazios
-    if (idNomeProfessor.value === "" || idEmailProfessor.value === "" || 
-        idSenhaProfessor.value === "" || idMatriProfessor.value === "") {
+    if (
+        idNomeProfessor.value === "" || 
+        idEmailProfessor.value === "" || 
+        idSenhaProfessor.value === "" || 
+        idMatriProfessor.value === ""
+    ) {
         alert("Por favor, preencha todos os campos do professor.");
         return;
     }
-	
-	const checkboxes = document.querySelectorAll(".check-disciplina:checked"); //Refencia ao ID das check box
-	const disciplinasSelecionadas = [...checkboxes].map(c => parseInt(c.value)); //Recebe os valores selecionados pela check box
 
-    //Criação do DTO (O JSON deve usar os nomes de campos da entidade: nomeProfessor, matriProfessor, etc.)
+    const checkboxes = document.querySelectorAll(".check-disciplina:checked");
+    const disciplinasSelecionadas = [...checkboxes].map(c => parseInt(c.value));
+
     const professorDTO = {
-        //Os nomes das propriedades abaixo devem coincidir com os setters/fields da sua classe Professor/ProfessorDTO
         nomeProfessor: idNomeProfessor.value,
         emailProfessor: idEmailProfessor.value,
         senhaProfessor: idSenhaProfessor.value,
         matriProfessor: idMatriProfessor.value,
-		idsDisciplinas: disciplinasSelecionadas
+        idsDisciplinas: disciplinasSelecionadas
     };
 
-    //Requisição POST
     fetch("http://localhost:8080/professor/salvar", {
         headers: {
             'Accept': 'application/json',
@@ -38,97 +42,116 @@ function salvarProfessor() {
         body: JSON.stringify(professorDTO) 
     })
     .then(res => {
-        if (res.ok) {
-            return res.json(); 
-        } else if (res.status === 400) {
-             // Trata erros de validação
-             return res.json().then(errorData => {
-                 alert("Erro de validação: " + (errorData.message || res.statusText));
-                 throw new Error("Erro de validação.");
-             });
-        } else {
-            // Trata outros erros (4xx, 5xx)
-            console.error("Erro ao salvar professor. Status:", res.status, res.statusText);
-            alert("Erro ao salvar professor. Consulte o console (F12) para mais detalhes.");
-            throw new Error("Falha na requisição."); 
+        if (res.ok) return res.json(); 
+        if (res.status === 400) {
+            return res.json().then(errorData => {
+                alert("Erro de validação: " + (errorData.message || res.statusText));
+                throw new Error("Erro de validação.");
+            });
         }
+        alert("Erro ao salvar professor.");
+        throw new Error("Falha na requisição.");
     })
     .then(professorSalvo => {
-        //Sucesso: Feedback para o usuário e limpeza
         alert(`Professor ${professorSalvo.nomeProfessor} (ID: ${professorSalvo.idProfessor}) salvo com sucesso!`);
         limparCamposProfessor();
-        // Opcional: listarProfessores(); 
+		listarProfessores(); //Atualiza tabela imediatamente
     })
-    .catch(err => {
-        console.error("Erro na requisição POST:", err);
-    });
+    .catch(err => console.error("Erro:", err));
 }
 
-//Função auxiliar para limpar os campos
+// =============================
+// Limpar Campos
+// =============================
 function limparCamposProfessor() {
     idNomeProfessor.value = "";
     idEmailProfessor.value = "";
     idSenhaProfessor.value = "";
     idMatriProfessor.value = "";
-	
-	// Desmarca todas as checkboxes de disciplinas
-	    const checkboxes = document.querySelectorAll(".check-disciplina");
-	    checkboxes.forEach(c => c.checked = false);
+    document.querySelectorAll(".check-disciplina").forEach(c => c.checked = false);
 }
 
-//Função para listar disciplinas e preencher a tabela
-// Função para listar disciplinas e preencher a tabela
+// =============================
+// Listar Disciplinas
+// =============================
 function listarDisciplinas() {
-	fetch("http://localhost:8080/disciplina/list")
-		.then(res => res.json())
-		.then(disciplinas => {
-			// Verifica se o elemento <tbody> foi encontrado
-			if (document.querySelector("#tableDisciplina tbody")) {
-				// 💡 Ação Correta: Limpa APENAS o corpo da tabela (<tbody>)
-				(document.querySelector("#tableDisciplina tbody")).innerHTML = ""; 
+    fetch("http://localhost:8080/disciplina/list")
+        .then(res => res.json())
+        .then(disciplinas => {
+            tabelaBody.innerHTML = ""; // Limpa antes de preencher
 
-				disciplinas.forEach(d => {
-					const linha = document.createElement("tr");
-
-					// Geração da linha de dados, incluindo o botão de exclusão
-					linha.innerHTML = `
-					    <td>${d.idDisciplina}</td>
-					    <td>${d.nomeDisciplina}</td>
-					    <td>
-					        <input 
-					            type="checkbox" 
-					            class="check-disciplina"
-					            value="${d.idDisciplina}"
-					        >
-					    </td>
-					`;
-
-					// Anexa a nova linha no corpo da tabela (<tbody>)
-					(document.querySelector("#tableDisciplina tbody")).appendChild(linha);
-				});
-
-				// Adiciona event listeners aos botões recém-criados
-				// O querySelectorAll deve ser feito após as linhas serem inseridas.
-				document.querySelectorAll(".btn-excluir").forEach(button => {
-					button.addEventListener('click', function() {
-						const id = this.getAttribute('data-id');
-						// Chama a função de exclusão que deve estar definida no seu script
-						excluirDisciplina(id); 
-					});
-				});
-
-			} else {
-				console.error("O elemento <tbody> da tabela com ID #tableDisciplina não foi encontrado.");
-			}
-		})
-		.catch(err => console.error("Erro ao listar disciplinas:", err));
+            disciplinas.forEach(d => {
+                const linha = document.createElement("tr");
+                linha.innerHTML = `
+                    <td>${d.idDisciplina}</td>
+                    <td>${d.nomeDisciplina}</td>
+                    <td>
+                        <input type="checkbox" class="check-disciplina" value="${d.idDisciplina}">
+                    </td>
+                `;
+                tabelaBody.appendChild(linha);
+            });
+        })
+        .catch(err => console.error("Erro ao listar disciplinas:", err));
 }
 
-//Ouve o evento de submissão do formulário
+// =============================
+// Filtro da Tabela — Letra por letra
+// =============================
+const filtroDisciplina = document.getElementById("filtroDisciplina");
+
+filtroDisciplina.addEventListener("keyup", function () {
+    const texto = filtroDisciplina.value.toLowerCase();
+    const linhas = tabelaBody.getElementsByTagName("tr");
+
+    for (let i = 0; i < linhas.length; i++) {
+        const coluna = linhas[i].getElementsByTagName("td")[1];
+        if (coluna) {
+            const nome = coluna.textContent.toLowerCase();
+            linhas[i].style.display = nome.includes(texto) ? "" : "none";
+        }
+    }
+});
+
+function listarProfessores() {
+    fetch("http://localhost:8080/professor/list")
+        .then(res => res.json())
+        .then(professores => {
+            const tbody = document.querySelector("#tableProfessor tbody");
+            tbody.innerHTML = "";
+
+            professores.forEach(p => {
+                const linha = document.createElement("tr");
+
+                const nomesDisciplinas = (p.disciplinas || [])
+                    .map(d => d.nomeDisciplina)
+                    .join(", ");
+
+                linha.innerHTML = `
+                    <td>${p.idProfessor}</td>
+                    <td>${p.nomeProfessor}</td>
+                    <td>${p.matriProfessor}</td>
+                    <td>${nomesDisciplinas || "-"}</td>
+                    <td>
+                        <button class="btn-editar" data-id="${p.idProfessor}">Editar</button>
+                        <button class="btn-excluir" data-id="${p.idProfessor}">Excluir</button>
+                    </td>
+                `;
+
+                tbody.appendChild(linha);
+            });
+        })
+        .catch(err => console.error("Erro ao listar professores:", err));
+}
+
+
+// Event Listeners
 formProfessor.addEventListener('submit', function(event) {
-    event.preventDefault(); // Impede o recarregamento da página
+    event.preventDefault();
     salvarProfessor(); 
 });
 
-//Chama a função ao carregar a página
-document.addEventListener("DOMContentLoaded", listarDisciplinas);
+document.addEventListener("DOMContentLoaded", () => {
+    listarDisciplinas();
+    listarProfessores();
+});

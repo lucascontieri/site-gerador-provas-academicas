@@ -52,7 +52,7 @@ public class ProfessorController {
 		    
 			
 		  //Atualiza os dados do professor no Banco de dados utilizando o id do Professor
-		    @PutMapping("/{idProfessor}")
+		    @PutMapping("/atualizar/{idProfessor}")
 		    public ResponseEntity<Professor> atualizar(@PathVariable int idProfessor,
                     @Valid @RequestBody ProfessorDTO dto) {
 		    Optional<Professor> atualizado = professorService.atualizar(idProfessor, dto);

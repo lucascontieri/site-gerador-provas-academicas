@@ -1,54 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
-
-  <head>
-    <meta charset="UTF-8">
-    <title>Tela Professor</title>
-    <link rel="stylesheet" th:href="@{/css/professor.css}">
-
-  </head>
-    
-  <body>
-  <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Professor</title>
-    <link rel="stylesheet" href="professor.css"> 
+    <link rel="stylesheet" th:href="@{/css/professor.css}">
 </head>
+
 <body>
 
-    <h1>Cadastro de Novo Professor</h1>
+<div class="container">
 
-    <form id="formProfessor">
-        <input type="text" id="idNomeProfessor" placeholder="Nome Completo" required>
-        <input type="email" id="idEmailProfessor" placeholder="Email do Professor" required>
-        <input type="password" id="idSenhaProfessor" placeholder="Senha" required>
-        <input type="text" id="idMatriProfessor" placeholder="Matrícula" required>
-        
-        <button type="submit">Salvar Professor</button>
-    </form>
-	
-	<div class="table">
-	  <h1>Selecione uma disciplina para professor</h1>
-	  <table id="tableDisciplina">
-	    <thead>
-	      <tr>
-	        <th>Id</th>
-	        <th>Disciplina</th>
-	        <th>Ações</th> <!-- Nova coluna -->
-	      </tr>
-	    </thead>
-	    <tbody></tbody>
-	  </table>
-	</div>
+    <!-- FORMULÁRIO -->
+    <div class="box-form">
+        <h1>Cadastro de Novo Professor</h1>
 
-    <script src="script.js"></script>
-</body>
-</html>
-    <script  th:src="@{/js/professor.js}"></script>
+        <form id="formProfessor">
+            <input type="text" id="idNomeProfessor" placeholder="Nome Completo" required>
+            <input type="email" id="idEmailProfessor" placeholder="Email do Professor" required>
+            <input type="password" id="idSenhaProfessor" placeholder="Senha" required>
+            <input type="text" id="idMatriProfessor" placeholder="Matrícula" required>
+            
+            <button type="submit">Salvar Professor</button>
+        </form>
+      
+      <!-- 🔹 Tabela de Professores -->
+<h2>Lista de Professores</h2>
 
-  </body>
+<div id="box-professores">
+    <table id="tableProfessor">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Matrícula</th>
+                <th>Disciplinas</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+  </div>
+
+    <!-- TABELA DISCIPLINAS -->
+    <div class="box-table">
+    <h2>Selecione uma disciplina para professor</h2>
+<input type="text" id="filtroDisciplina" placeholder="Buscar disciplina...">
+    <div class="table-container">
+      
+        <table id="tableDisciplina">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Disciplina</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
   
+  
+
+<script th:src="@{/js/professor.js}"></script>
+</body>
 </html>
