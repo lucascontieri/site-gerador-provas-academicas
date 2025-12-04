@@ -61,4 +61,14 @@ public class PagesController {
     public String mostrarTelaProva() {
         return "htmlGerarProva/gerarProva"; 
     }
+    
+    @GetMapping("/tela/recuperarSenha")
+    public String mostrarTelaRecuperarSenha() {
+        return "htmlRecuperarSenha/recuperarSenha"; 
+    }
+    
+    @GetMapping("/tela/nova-senha")
+    public String mostrarTelaNovaSenha() {
+        return "htmlRecuperarSenha/nova-senha"; 
+    }
 }

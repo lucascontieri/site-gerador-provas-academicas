@@ -115,6 +115,29 @@ public class ProfessorService {
                 });
     }
     
+    public Professor buscarPorEmailEMatricula(String email, String matricula) {
+        Professor professorEmail = professorRepository.findByemailProfessor(email);
+        if (professorEmail == null) {
+            return null;
+        }
+
+        // verifica matrícula também
+        if (!professorEmail.getMatriProfessor().equals(matricula)) {
+            return null;
+        }
+
+        return professorEmail;
+    }
+    
+    @Transactional
+    public void atualizarSenha(int idProfessor, String novaSenha) {
+        Professor professor = professorRepository.findById(idProfessor)
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+
+        professor.setSenhaProfessor(novaSenha);
+        professorRepository.save(professor);
+    }
+    
 }
 
 
