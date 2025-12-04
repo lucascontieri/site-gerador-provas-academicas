@@ -1,0 +1,65 @@
+package com.example.controller;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.dto.ProfessorDTO;
+import com.example.model.Professor;
+
+
+import jakarta.validation.Valid;
+
+@RestController
+@CrossOrigin("*")
+@RequestMapping("/professor")  // base para todos os endpoints
+public class ProfessorController {
+
+	@Autowired
+	private com.example.service.ProfessorService professorService;
+	
+	//Lista todos os Professores cadastrados
+			@GetMapping("/list")
+		    public List<Professor> listar() {
+		        return professorService.ListarTodos();
+		    }
+			
+			//Salva um novo Professor no banco de dados utilizando metodo salvarProfessor
+		    @PostMapping("/salvar")
+		    public ResponseEntity<Professor> criar(@Valid @RequestBody ProfessorDTO dto) {
+		        Professor pro = professorService.SalvarProfessor(dto);
+		        return ResponseEntity.status(201).body(pro);
+		    }
+
+		    
+		  //Exclui a Disciplina pelo id dela
+		    @DeleteMapping("/excluir/{idProfessor}")
+		    public ResponseEntity<Void> excluir(@PathVariable int idProfessor) {
+		        professorService.excluirProfessor(idProfessor);
+		        return ResponseEntity.noContent().build();
+		    }
+		    
+			
+		  //Atualiza os dados do professor no Banco de dados utilizando o id do Professor
+		    @PutMapping("/{idProfessor}")
+		    public ResponseEntity<Professor> atualizar(@PathVariable int idProfessor,
+                    @Valid @RequestBody ProfessorDTO dto) {
+		    Optional<Professor> atualizado = professorService.atualizar(idProfessor, dto);
+		    return atualizado.map(ResponseEntity::ok)
+		    		.orElseGet(() -> ResponseEntity.notFound().build());
+		    }
+			
+	
+	
+}

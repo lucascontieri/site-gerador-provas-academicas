@@ -6,6 +6,7 @@ import com.example.model.Disciplina;
 
 public interface DisciplinaRepository extends JpaRepository<Disciplina, Integer> {
 	
-	
+	//Verifica a existencia de uma disciplina pelo nome
+	public boolean existsBynomeDisciplina(String nomeDisciplina);
 	
 }

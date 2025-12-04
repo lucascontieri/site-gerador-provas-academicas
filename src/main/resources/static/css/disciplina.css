@@ -19,3 +19,33 @@ input{
   border-radius:20px;
   padding:0 10px 0 10px;
 }
+
+table{
+  font-family:arial,sans-serif;
+  border-collapse: collapse;
+  width:100%
+}
+
+td, th{
+  border:1px solid #dddddd;
+  text-align: left;
+  padding:8px;
+  column-width: auto;
+}
+
+tr:nth-child(even){
+  background-color:#dddddd;
+}
+
+.btn-excluir {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-excluir:hover {
+  background-color: #c9302c;
+}

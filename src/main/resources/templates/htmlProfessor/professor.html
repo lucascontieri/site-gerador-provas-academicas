@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Tela Professor</title>
+    <link rel="stylesheet" th:href="@{/css/professor.css}">
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Professor</title>
+    <link rel="stylesheet" href="professor.css"> 
+</head>
+<body>
+
+    <h1>Cadastro de Novo Professor</h1>
+
+    <form id="formProfessor">
+        <input type="text" id="idNomeProfessor" placeholder="Nome Completo" required>
+        <input type="email" id="idEmailProfessor" placeholder="Email do Professor" required>
+        <input type="password" id="idSenhaProfessor" placeholder="Senha" required>
+        <input type="text" id="idMatriProfessor" placeholder="Matrícula" required>
+        
+        <button type="submit">Salvar Professor</button>
+    </form>
+	
+	<div class="table">
+	  <h1>Selecione uma disciplina para professor</h1>
+	  <table id="tableDisciplina">
+	    <thead>
+	      <tr>
+	        <th>Id</th>
+	        <th>Disciplina</th>
+	        <th>Ações</th> <!-- Nova coluna -->
+	      </tr>
+	    </thead>
+	    <tbody></tbody>
+	  </table>
+	</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+    <script  th:src="@{/js/professor.js}"></script>
+
+  </body>
+  
+</html>
