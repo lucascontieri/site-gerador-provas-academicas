@@ -3,34 +3,28 @@ package com.example.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.model.Coordenador;
 import com.example.model.Professor;
-import com.example.repository.CoordenadorRepository;
 import com.example.repository.ProfessorRepository;
 
 @Service
 public class LoginService {
 
-    @Autowired
+	@Autowired
     private ProfessorRepository professorRepository;
 
-    @Autowired
-    private CoordenadorRepository coordenadorRepository;
+	//Metodo para autenticar o professor pela matricula e senha
+    public Professor autenticar(String matriProfessor, String senhaProfessor) {
 
-    public Object autenticar(String matricula, String senha) {
+        Professor professor = professorRepository.findBymatriProfessor(matriProfessor);
 
-        // Tentativa como professor
-        Professor professor = professorRepository.findBymatriProfessor(matricula);
-        if (professor != null && professor.getSenhaProfessor().equals(senha)) {
-            return professor; // retorna professor logado
+        if (professor == null) {
+            return null;
         }
 
-        // Tentativa como coordenador
-        Coordenador coordenador = coordenadorRepository.findBymatriCoordenador(matricula);
-        if (coordenador != null && coordenador.getSenhaCoordenador().equals(senha)) {
-            return coordenador; // retorna coordenador logado
+        if (!professor.getSenhaProfessor().equals(senhaProfessor)) {
+            return null;
         }
 
-        return null; // nenhum dos dois
+        return professor;
     }
 }

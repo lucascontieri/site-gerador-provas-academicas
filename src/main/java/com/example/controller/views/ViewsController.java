@@ -58,13 +58,6 @@ public class ViewsController {
 			public String mostrarTelaProva() {
 			     return "htmlGerarProva/gerarProva"; 
 			}
-		
-	//Direciona para tela de cadastrar Coordenador
-		@GetMapping("/coordenador")
-			public String mostrarTelaCoordenador() {
-				 return "htmlCoordenador/coordenador"; 
-			}
-		
 	
 	
 	 

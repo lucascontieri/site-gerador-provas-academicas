@@ -8,7 +8,8 @@
 </head>
 
 <body>
-	
+
+	<button id="btnVoltar" class="voltar">Voltar</button>
 <div class="container">
 
     <!-- FORMULÁRIO, campos onde seram cadastrados os dados do professor -->
@@ -20,7 +21,13 @@
             <input type="email" id="idEmailProfessor" placeholder="Email do Professor" required>
             <input type="password" id="idSenhaProfessor" placeholder="Senha" required>
             <input type="text" id="idMatriProfessor" placeholder="Matrícula" required>
-            
+
+            <select id="idTipoProfessor" required>
+                <option value="">Selecione o tipo</option>
+                <option value="0">Professor</option>
+                <option value="1">Coordenador</option>
+            </select>
+
             <button type="submit">Salvar Professor</button>
         </form>
       
@@ -35,6 +42,7 @@
                 <th>Nome</th>
                 <th>Matrícula</th>
                 <th>Disciplinas</th>
+                <th>Tipo</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -81,6 +89,13 @@
       <label>Matrícula:</label>
       <input type="text" id="editMatriProfessor" required>
 
+      <label>Tipo:</label>
+      <select id="editTipoProfessor" required>
+          <option value="">Selecione o tipo</option>
+          <option value="0">Professor</option>
+          <option value="1">Coordenador</option>
+      </select>
+
       <h3>Disciplinas Atribuídas</h3>
       <div id="editListaDisciplinas" class="disciplinas-container"></div>
 
@@ -92,8 +107,7 @@
   </div>
 </div>
 
-<button type="button" id="btnVoltar" class="btn-voltar">Voltar</button>
-  
 <script th:src="@{/js/professor.js}"></script>
 </body>
 </html>
+

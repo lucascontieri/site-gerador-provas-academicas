@@ -28,16 +28,6 @@ public class ProfessorService {
     public List<Professor> ListarTodos() {
         return professorRepository.findAll();
     }
-    
-    //Busca o professor pela sua matricula
-    public Professor GetBymatriProfessor(String matriProfessor) {
-        return professorRepository.findBymatriProfessor(matriProfessor);
-    }
-    
-    //Busca o professor pela sua matricula
-    public Professor GetByidProfessor(int idProfessor) {
-        return professorRepository.findByIdProfessor(idProfessor);
-    }
 
     // Salvar novo professor + relacionamento
     @Transactional
@@ -47,7 +37,7 @@ public class ProfessorService {
         pro.setMatriProfessor(dto.getMatriProfessor());
         pro.setSenhaProfessor(dto.getSenhaProfessor());
         pro.setEmailProfessor(dto.getEmailProfessor());
-
+        pro.setTipoProfessor(dto.getTipoProfessor());
         // Salva professor primeiro
         pro = professorRepository.save(pro);
 
@@ -75,6 +65,16 @@ public class ProfessorService {
         professorRepository.deleteById(idProfessor);
     }
 
+    //Busca o professor pela sua matricula
+    public Professor GetBymatriProfessor(String matriProfessor) {
+        return professorRepository.findBymatriProfessor(matriProfessor);
+    }
+    
+    //Busca o professor pela sua matricula
+    public Professor GetByidProfessor(int idProfessor) {
+        return professorRepository.findByIdProfessor(idProfessor);
+    }
+
     //Atualiza o professor pelo seu idProfessor
     public java.util.Optional<Professor> AtualizarProfessor(int idProfessor, ProfessorDTO dto) {
         return professorRepository.findById(idProfessor)
@@ -83,7 +83,7 @@ public class ProfessorService {
                     pro.setMatriProfessor(dto.getMatriProfessor());
                     pro.setEmailProfessor(dto.getEmailProfessor());
                     pro.setSenhaProfessor(dto.getSenhaProfessor());
-
+                    pro.setTipoProfessor(dto.getTipoProfessor());
                     //Atualizar disciplinas 
                     List<Disciplina> disciplinas = dto.getIdsDisciplinas().stream()
                             .map(id -> disciplinaRepository.findById(id).orElse(null))

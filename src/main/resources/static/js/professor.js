@@ -6,6 +6,7 @@ const idNomeProfessor = document.querySelector("#idNomeProfessor");
 const idEmailProfessor = document.querySelector("#idEmailProfessor");
 const idSenhaProfessor = document.querySelector("#idSenhaProfessor");
 const idMatriProfessor = document.querySelector("#idMatriProfessor"); 
+const idTipoProfessor = document.querySelector("#idTipoProfessor");
 const tabelaBody = document.querySelector("#tableDisciplina tbody"); 
 
 // =============================
@@ -16,23 +17,56 @@ function salvarProfessor() {
         idNomeProfessor.value === "" || 
         idEmailProfessor.value === "" || 
         idSenhaProfessor.value === "" || 
-        idMatriProfessor.value === ""
+        idMatriProfessor.value === "" ||
+        idTipoProfessor.value === ""
     ) {
         alert("Por favor, preencha todos os campos do professor.");
         return;
     }
 
-    const checkboxes = document.querySelectorAll(".check-disciplina:checked");
-    const disciplinasSelecionadas = [...checkboxes].map(c => parseInt(c.value));
+    const tipo = parseInt(idTipoProfessor.value);
 
-    const professorDTO = {
-        nomeProfessor: idNomeProfessor.value,
-        emailProfessor: idEmailProfessor.value,
-        senhaProfessor: idSenhaProfessor.value,
-        matriProfessor: idMatriProfessor.value,
-        idsDisciplinas: disciplinasSelecionadas
-    };
+    if (tipo === 1) { 
+        // Coordenador -> atribui todas as disciplinas
+        fetch("http://localhost:8080/disciplina/list")
+            .then(res => res.json())
+            .then(disciplinas => {
+                const idsDisciplinas = disciplinas.map(d => d.idDisciplina);
 
+                const professorDTO = {
+                    nomeProfessor: idNomeProfessor.value,
+                    emailProfessor: idEmailProfessor.value,
+                    senhaProfessor: idSenhaProfessor.value,
+                    matriProfessor: idMatriProfessor.value,
+                    tipoProfessor: tipo,
+                    idsDisciplinas: idsDisciplinas
+                };
+
+                enviarProfessor(professorDTO);
+            })
+            .catch(err => console.error("Erro ao buscar disciplinas:", err));
+    } else {
+        // Professor -> pega apenas as selecionadas
+        const checkboxes = document.querySelectorAll(".check-disciplina:checked");
+        const disciplinasSelecionadas = [...checkboxes].map(c => parseInt(c.value));
+
+        const professorDTO = {
+            nomeProfessor: idNomeProfessor.value,
+            emailProfessor: idEmailProfessor.value,
+            senhaProfessor: idSenhaProfessor.value,
+            matriProfessor: idMatriProfessor.value,
+            tipoProfessor: tipo,
+            idsDisciplinas: disciplinasSelecionadas
+        };
+
+        enviarProfessor(professorDTO);
+    }
+}
+
+//=====================================================================
+// Função para enviar o professor ao backend
+//=====================================================================
+function enviarProfessor(professorDTO) {
     fetch("http://localhost:8080/professor/salvar", {
         headers: {
             'Accept': 'application/json',
@@ -55,10 +89,11 @@ function salvarProfessor() {
     .then(professorSalvo => {
         alert(`Professor ${professorSalvo.nomeProfessor} (ID: ${professorSalvo.idProfessor}) salvo com sucesso!`);
         limparCamposProfessor();
-		listarProfessores(); //Atualiza tabela imediatamente
+        listarProfessores(); // Atualiza tabela imediatamente
     })
     .catch(err => console.error("Erro:", err));
 }
+
 
 // =============================
 // Excluir Professor
@@ -67,18 +102,13 @@ document.addEventListener("click", function (event) {
     if (event.target.classList.contains("btn-excluir")) {
         const idProfessor = event.target.getAttribute("data-id");
 
-        // Exibe o prompt para digitar a senha
         const senha = prompt("Digite a senha para confirmar a exclusão:");
-
-        // Se o usuário cancelar ou não digitar nada
         if (senha === null || senha.trim() === "") {
             alert("Exclusão cancelada. Senha não informada.");
             return;
         }
 
-        // Exemplo de senha fixa (você pode mudar para outro valor ou buscar dinamicamente)
         const senhaCorreta = "fatecGRU2025@#";
-
         if (senha !== senhaCorreta) {
             alert("Senha incorreta! Exclusão não autorizada.");
             return;
@@ -91,7 +121,7 @@ document.addEventListener("click", function (event) {
             .then(res => {
                 if (res.ok) {
                     alert("Professor excluído com sucesso!");
-                    listarProfessores(); // Atualiza a tabela
+                    listarProfessores();
                 } else if (res.status === 404) {
                     alert("Professor não encontrado!");
                 } else {
@@ -111,6 +141,7 @@ function limparCamposProfessor() {
     idEmailProfessor.value = "";
     idSenhaProfessor.value = "";
     idMatriProfessor.value = "";
+    idTipoProfessor.value = "";
     document.querySelectorAll(".check-disciplina").forEach(c => c.checked = false);
 }
 
@@ -121,7 +152,7 @@ function listarDisciplinas() {
     fetch("http://localhost:8080/disciplina/list")
         .then(res => res.json())
         .then(disciplinas => {
-            tabelaBody.innerHTML = ""; // Limpa antes de preencher
+            tabelaBody.innerHTML = "";
 
             disciplinas.forEach(d => {
                 const linha = document.createElement("tr");
@@ -167,23 +198,24 @@ function listarProfessores() {
             tbody.innerHTML = "";
 
             professores.forEach(p => {
-                const linha = document.createElement("tr");
-
                 const nomesDisciplinas = (p.disciplinas || [])
                     .map(d => d.nomeDisciplina)
                     .join(", ");
 
+                const tipoTexto = p.tipoProfessor === 1 ? "Coordenador" : "Professor";
+
+                const linha = document.createElement("tr");
                 linha.innerHTML = `
                     <td>${p.idProfessor}</td>
                     <td>${p.nomeProfessor}</td>
                     <td>${p.matriProfessor}</td>
                     <td>${nomesDisciplinas || "-"}</td>
+                    <td>${tipoTexto}</td>
                     <td>
                         <button class="btn-editar" data-id="${p.idProfessor}">Editar</button>
                         <button class="btn-excluir" data-id="${p.idProfessor}">Excluir</button>
                     </td>
                 `;
-
                 tbody.appendChild(linha);
             });
         })
@@ -197,18 +229,16 @@ document.addEventListener("click", function (event) {
     if (event.target.classList.contains("btn-editar")) {
         const idProfessor = event.target.getAttribute("data-id");
 
-        // Busca os dados do professor
         fetch(`http://localhost:8080/professor/${idProfessor}`)
             .then(res => res.json())
             .then(professor => {
-                // Preenche campos do professor
                 document.querySelector("#editIdProfessor").value = professor.idProfessor;
                 document.querySelector("#editNomeProfessor").value = professor.nomeProfessor;
                 document.querySelector("#editEmailProfessor").value = professor.emailProfessor;
                 document.querySelector("#editSenhaProfessor").value = professor.senhaProfessor;
                 document.querySelector("#editMatriProfessor").value = professor.matriProfessor;
+                document.querySelector("#editTipoProfessor").value = professor.tipoProfessor;
 
-                // Buscar todas as disciplinas
                 fetch("http://localhost:8080/disciplina/list")
                     .then(res => res.json())
                     .then(disciplinas => {
@@ -227,7 +257,6 @@ document.addEventListener("click", function (event) {
                             container.appendChild(div);
                         });
 
-                        // Exibe modal
                         document.querySelector("#modalEditar").style.display = "flex";
                     });
             })
@@ -249,7 +278,6 @@ document.querySelector("#formEditarProfessor").addEventListener("submit", functi
     event.preventDefault();
 
     const id = document.querySelector("#editIdProfessor").value;
-
     const idsDisciplinas = [...document.querySelectorAll(".edit-check-disciplina:checked")]
         .map(c => parseInt(c.value));
 
@@ -258,6 +286,7 @@ document.querySelector("#formEditarProfessor").addEventListener("submit", functi
         emailProfessor: document.querySelector("#editEmailProfessor").value,
         senhaProfessor: document.querySelector("#editSenhaProfessor").value,
         matriProfessor: document.querySelector("#editMatriProfessor").value,
+        tipoProfessor: parseInt(document.querySelector("#editTipoProfessor").value),
         idsDisciplinas: idsDisciplinas
     };
 
@@ -280,7 +309,9 @@ document.querySelector("#formEditarProfessor").addEventListener("submit", functi
     .catch(err => console.error("Erro:", err));
 });
 
+//=====================================================================
 // Event Listeners
+//=====================================================================
 formProfessor.addEventListener('submit', function(event) {
     event.preventDefault();
     salvarProfessor(); 
@@ -290,9 +321,10 @@ document.addEventListener("DOMContentLoaded", () => {
     listarDisciplinas();
     listarProfessores();
 });
-// ==================================================
-// Botão Voltar
-// ==================================================
-document.getElementById("btnVoltar").addEventListener("click", () => {
+//=====================================================================
+// Botão para voltar ao menu
+//=====================================================================
+document.getElementById("btnVoltar").onclick = () => {
     window.location.href = "/menu";
-});
+};
+

@@ -15,80 +15,92 @@ import jakarta.persistence.ManyToMany;
 @Entity
 public class Professor {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "idProfessor") //informa o nome real da coluna
-	private int idProfessor;
-	private String nomeProfessor;
-	private String matriProfessor;
-	private String emailProfessor;
-	private String senhaProfessor;
-	
-	@ManyToMany
-	@JoinTable(
-	    name = "professordisciplina", // nome da tabela intermediária
-	    joinColumns = @JoinColumn(name = "idProfessor"), // FK do professor
-	    inverseJoinColumns = @JoinColumn(name = "idDisciplina") // FK da disciplina
-	)
-	private List<Disciplina> disciplinas = new ArrayList<>();
-	
-	
-	public Professor() {
-		super();
-	}
+    @Id 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idProfessor") // informa o nome real da coluna
+    private int idProfessor;
 
-	public Professor(int idProfessor, String nomeProfessor, String matriProfessor, String emailProfessor,
-			String senhaProfessor) {
-		super();
-		this.idProfessor = idProfessor;
-		this.nomeProfessor = nomeProfessor;
-		this.matriProfessor = matriProfessor;
-		this.emailProfessor = emailProfessor;
-		this.senhaProfessor = senhaProfessor;
-	}
+    private String nomeProfessor;
+    private String matriProfessor;
+    private String emailProfessor;
+    private String senhaProfessor;
 
-	public String getNomeProfessor() {
-		return nomeProfessor;
-	}
+    @Column(name = "tipoProfessor", columnDefinition = "TINYINT")
+    private byte tipoProfessor; // 0, 1, 2, etc.
 
-	public void setNomeProfessor(String nomeProfessor) {
-		this.nomeProfessor = nomeProfessor;
-	}
+    @ManyToMany
+    @JoinTable(
+        name = "professordisciplina", // nome da tabela intermediária
+        joinColumns = @JoinColumn(name = "idProfessor"), // FK do professor
+        inverseJoinColumns = @JoinColumn(name = "idDisciplina") // FK da disciplina
+    )
+    private List<Disciplina> disciplinas = new ArrayList<>();
 
-	public String getMatriProfessor() {
-		return matriProfessor;
-	}
+    public Professor() {
+        super();
+    }
 
-	public void setMatriProfessor(String matriProfessor) {
-		this.matriProfessor = matriProfessor;
-	}
+    public Professor(int idProfessor, String nomeProfessor, String matriProfessor, String emailProfessor,
+                     String senhaProfessor, byte tipoProfessor) {
+        super();
+        this.idProfessor = idProfessor;
+        this.nomeProfessor = nomeProfessor;
+        this.matriProfessor = matriProfessor;
+        this.emailProfessor = emailProfessor;
+        this.senhaProfessor = senhaProfessor;
+        this.tipoProfessor = tipoProfessor;
+    }
 
-	public String getEmailProfessor() {
-		return emailProfessor;
-	}
+    public int getIdProfessor() {
+        return idProfessor;
+    }
 
-	public void setEmailProfessor(String emailProfessor) {
-		this.emailProfessor = emailProfessor;
-	}
+    public String getNomeProfessor() {
+        return nomeProfessor;
+    }
 
-	public String getSenhaProfessor() {
-		return senhaProfessor;
-	}
+    public void setNomeProfessor(String nomeProfessor) {
+        this.nomeProfessor = nomeProfessor;
+    }
 
-	public void setSenhaProfessor(String senhaProfessor) {
-		this.senhaProfessor = senhaProfessor;
-	}
+    public String getMatriProfessor() {
+        return matriProfessor;
+    }
 
-	public int getIdProfessor() {
-		return idProfessor;
-	}
-	
-	public List<Disciplina> getDisciplinas() {
-		return disciplinas;
-	}
+    public void setMatriProfessor(String matriProfessor) {
+        this.matriProfessor = matriProfessor;
+    }
 
-	public void setDisciplinas(List<Disciplina> disciplinas) {
-		this.disciplinas = disciplinas;
-	}
-	
-	
+    public String getEmailProfessor() {
+        return emailProfessor;
+    }
+
+    public void setEmailProfessor(String emailProfessor) {
+        this.emailProfessor = emailProfessor;
+    }
+
+    public String getSenhaProfessor() {
+        return senhaProfessor;
+    }
+
+    public void setSenhaProfessor(String senhaProfessor) {
+        this.senhaProfessor = senhaProfessor;
+    }
+
+    public byte getTipoProfessor() {
+        return tipoProfessor;
+    }
+
+    public void setTipoProfessor(byte tipoProfessor) {
+        this.tipoProfessor = tipoProfessor;
+    }
+
+    public List<Disciplina> getDisciplinas() {
+        return disciplinas;
+    }
+
+    public void setDisciplinas(List<Disciplina> disciplinas) {
+        this.disciplinas = disciplinas;
+    }
 }
+

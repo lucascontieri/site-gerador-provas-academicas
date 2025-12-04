@@ -178,13 +178,15 @@ disciplina.addEventListener('submit', function(event) {
 
 	salvar();
 });
-// ============================
+
+//=====================================================================
 // Chama a função ao carregar a página
-// ============================
+//=====================================================================
 document.addEventListener("DOMContentLoaded", listarDisciplinas);
-// ============================================
-// Botão voltar
-// ============================================
+
+//=====================================================================
+// Botão para voltar ao menu
+//=====================================================================
 document.getElementById("btnVoltar").onclick = () => {
     window.location.href = "/menu";
 };

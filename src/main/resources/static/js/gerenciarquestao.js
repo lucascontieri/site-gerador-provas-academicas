@@ -5,7 +5,7 @@ const API_BASE = "http://localhost:8080/questao";
 //=====================================================================
 async function getProfessorLogado() {
     try {
-        const resp = await fetch("http://localhost:8080/questao/professor/sessao");
+        const resp = await fetch(`${API_BASE}/professor/sessao`);
         if (resp.ok) {
             const data = await resp.json();
             return data.idProfessor;
@@ -17,15 +17,34 @@ async function getProfessorLogado() {
 }
 
 //=====================================================================
-// Carrega todas as questões (com filtro)
+// Carrega disciplinas do professor logado
+//=====================================================================
+async function getDisciplinasProfessor() {
+    try {
+        const resp = await fetch(`${API_BASE}/carregarDisciplinas`);
+        if (resp.ok) {
+            const data = await resp.json();
+            // Retorna apenas os IDs das disciplinas
+            return data.map(d => d.idDisciplina);
+        }
+    } catch (e) {
+        console.error("Erro ao obter disciplinas do professor:", e);
+    }
+    return [];
+}
+
+//=====================================================================
+// Carrega todas as questões (filtradas pelas disciplinas do professor)
 //=====================================================================
 async function carregarTabela() {
     const tbody = document.querySelector("#tabelaQuestoes tbody");
     tbody.innerHTML = "";
 
     const idProfessorLogado = await getProfessorLogado();
+    if (idProfessorLogado === null) return;
 
-    // FILTRO POR DISCIPLINA
+    const disciplinasDoProfessor = await getDisciplinasProfessor();
+
     const filtro = document.getElementById("filtroDisciplina").value.toLowerCase();
 
     try {
@@ -33,9 +52,8 @@ async function carregarTabela() {
         const questoes = await response.json();
 
         questoes
-            .filter(q =>
-                q.disciplina?.nomeDisciplina?.toLowerCase().includes(filtro)
-            )
+            .filter(q => disciplinasDoProfessor.includes(q.disciplina?.idDisciplina))
+            .filter(q => q.disciplina?.nomeDisciplina?.toLowerCase().includes(filtro))
             .forEach(q => {
                 const tr = document.createElement("tr");
 
@@ -56,15 +74,13 @@ async function carregarTabela() {
 
                 const tdAcoes = document.createElement("td");
 
-                // Botão Exibir (todos podem ver)
                 const btnView = document.createElement("button");
                 btnView.textContent = "Exibir";
                 btnView.classList.add("view");
                 btnView.onclick = () => abrirModal(q, false);
                 tdAcoes.appendChild(btnView);
 
-                // Só o professor criador pode editar/excluir
-                if (idProfessorLogado !== null && idProfessorLogado === q.idProfessor) {
+                if (idProfessorLogado === q.idProfessor) {
                     const btnEdit = document.createElement("button");
                     btnEdit.textContent = "Editar";
                     btnEdit.classList.add("edit");
@@ -210,17 +226,8 @@ async function excluirQuestao(idQuestao) {
 //=====================================================================
 // Botão para voltar ao menu
 //=====================================================================
-document.getElementById("btnVoltar").onclick = async () => {
-    try {
-        const response = await fetch(window.location.href = "/menu");
-        if (response.ok) {
-            window.location.href = "/menu";
-        } else {
-            console.error("Erro ao chamar a tela de menu:", response.status);
-        }
-    } catch (error) {
-        console.error("Erro ao chamar a tela de menu:", error);
-    }
+document.getElementById("btnVoltar").onclick = () => {
+    window.location.href = "/menu";
 };
 
 //=====================================================================
@@ -232,6 +239,7 @@ document.getElementById("filtroDisciplina").addEventListener("input", () => carr
 // Inicializa tabela
 //=====================================================================
 carregarTabela();
+
 
 
 

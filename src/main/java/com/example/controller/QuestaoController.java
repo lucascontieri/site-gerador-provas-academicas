@@ -102,30 +102,19 @@ public class QuestaoController {
 	        @Valid @RequestBody QuestaoDTO dto,
 	        HttpSession session) {
 
-	    String tipoUsuario = (String) session.getAttribute("tipoUsuario");
-
-	    Integer idProfessor = null;
-
-	    // PROFESSOR
-	    if ("professor".equalsIgnoreCase(tipoUsuario)) {
-	        idProfessor = (Integer) session.getAttribute("idProfessor");
-	    }
-
-	    // COORDENADOR — usa o idCoordenador como idProfessor
-	    if ("coordenador".equalsIgnoreCase(tipoUsuario)) {
-	        idProfessor = (Integer) session.getAttribute("idCoordenador");
-	    }
+	    Integer idProfessor = (Integer) session.getAttribute("idProfessor");
 
 	    if (idProfessor == null) {
-	        return ResponseEntity.status(401).build(); 
+	        return ResponseEntity.status(401).build(); // Não está logado
 	    }
 
+	    // força o id vir da sessão e não do front
 	    dto.setIdProfessor(idProfessor);
 
 	    Questao quest = questaoService.SalvarQuestao(dto);
+
 	    return ResponseEntity.status(201).body(quest);
 	}
-
     
   //Exclui a Questao pelo seu id 
     @DeleteMapping("/excluir/{idQuestao}")
@@ -159,18 +148,8 @@ public class QuestaoController {
 	
     //Carrega as disciplinas registadas nas questões
     @SuppressWarnings("unchecked")
-    @GetMapping("/carregarDisciplinas")
+	@GetMapping("/carregarDisciplinas")
     public ResponseEntity<List<Disciplina>> carregarDisciplinas(HttpSession session) {
-
-        String tipoUsuario = (String) session.getAttribute("tipoUsuario");
-
-        // Se for COORDENADOR → retorna todas as disciplinas
-        if (tipoUsuario != null && tipoUsuario.equalsIgnoreCase("coordenador")) {
-            List<Disciplina> todas = disciplinaRepository.findAll();
-            return ResponseEntity.ok(todas);
-        }
-
-        // Se for PROFESSOR → retorna somente as disciplinas dele
         List<Integer> ids = (List<Integer>) session.getAttribute("idsDisciplinas");
 
         if (ids == null || ids.isEmpty()) {
@@ -180,7 +159,6 @@ public class QuestaoController {
         List<Disciplina> disciplinas = disciplinaRepository.findAllById(ids);
         return ResponseEntity.ok(disciplinas);
     }
-
     
     //Verifica qual professor esta logado no sistema e traz seu ID
     @GetMapping("/professor/sessao")

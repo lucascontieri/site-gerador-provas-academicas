@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const tbody = document.querySelector("#tabelaQuestoes tbody");
     const filtroInput = document.getElementById("filtroDisciplina");
+    const btnPreview = document.getElementById("btnPreview");
+    const btnGerarPdf = document.getElementById("btnGerarPdf");
+    const btnVoltar = document.getElementById("btnVoltar");
 
     let disciplinasPermitidas = [];
     let questoes = [];
@@ -44,6 +47,13 @@ document.addEventListener("DOMContentLoaded", () => {
             return disciplinasPermitidas.includes(disc) && disc.includes(filtroLower);
         });
 
+        if (filtradas.length === 0) {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td colspan="4" style="text-align:center;">Nenhuma questão encontrada.</td>`;
+            tbody.appendChild(tr);
+            return;
+        }
+
         filtradas.forEach(q => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
@@ -56,6 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // ============================================
+    // Evento do filtro
+    // ============================================
     filtroInput.addEventListener("input", e => renderTabela(e.target.value));
 
     // ============================================
@@ -65,6 +78,84 @@ document.addEventListener("DOMContentLoaded", () => {
         await carregarDisciplinas();
         await carregarQuestoes();
     })();
+
+    // ============================================
+    // Botão Pré-visualizar
+    // ============================================
+    btnPreview.addEventListener("click", () => {
+        const cabecalho = document.getElementById("cabecalho").value;
+
+        const selecionadas = [...document.querySelectorAll(".selectQuestao:checked")]
+            .map(c => Number(c.value));
+
+        if (selecionadas.length === 0) {
+            alert("Selecione pelo menos uma questão.");
+            return;
+        }
+
+        const escolhidas = selecionadas.map(id => questoes.find(q => q.idQuestao === id));
+
+        let html = `<h3>Cabeçalho</h3><p>${cabecalho}</p><hr><h3>Questões</h3>`;
+
+        escolhidas.forEach((q, i) => {
+            html += `
+                <p><b>${i + 1}) ${q.textQuestao}</b></p>
+                <ul>
+                    <li>A) ${q.alterA}</li>
+                    <li>B) ${q.alterB}</li>
+                    <li>C) ${q.alterC}</li>
+                    <li>D) ${q.alterD}</li>
+                    <li>E) ${q.alterE}</li>
+                </ul><hr>
+            `;
+        });
+
+        document.getElementById("conteudoPreview").innerHTML = html;
+        document.getElementById("modalPreview").style.display = "block";
+    });
+
+    // ============================================
+    // Botão Gerar PDF
+    // ============================================
+    btnGerarPdf.addEventListener("click", () => {
+        const cabecalho = document.getElementById("cabecalho").value;
+
+        const selecionadas = [...document.querySelectorAll(".selectQuestao:checked")]
+            .map(c => c.value);
+
+        if (selecionadas.length === 0) {
+            alert("Selecione pelo menos uma questão.");
+            return;
+        }
+
+        const form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/prova/gerar";
+
+        const cab = document.createElement("input");
+        cab.type = "hidden";
+        cab.name = "cabecalho";
+        cab.value = cabecalho;
+        form.appendChild(cab);
+
+        selecionadas.forEach(id => {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "questoesSelecionadas";
+            input.value = id;
+            form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+    });
+
+    // ============================================
+    // Botão Voltar
+    // ============================================
+    btnVoltar.addEventListener("click", () => {
+        window.location.href = "/menu";
+    });
 
 });
 
@@ -98,87 +189,9 @@ function fecharModal() {
     document.getElementById("modalVisualizar").style.display = "none";
 }
 
-// ============================================
-// Pré-visualizar prova
-// ============================================
-document.getElementById("btnPreview").addEventListener("click", () => {
-
-    const cabecalho = document.getElementById("cabecalho").value;
-
-    const selecionadas = [...document.querySelectorAll(".selectQuestao:checked")]
-        .map(c => Number(c.value));
-
-    if (selecionadas.length === 0) {
-        alert("Selecione pelo menos uma questão.");
-        return;
-    }
-
-    const escolhidas = selecionadas.map(id => questoes.find(q => q.idQuestao === id));
-
-    let html = `<h3>Cabeçalho</h3><p>${cabecalho}</p><hr><h3>Questões</h3>`;
-
-    escolhidas.forEach((q, i) => {
-        html += `
-            <p><b>${i + 1}) ${q.textQuestao}</b></p>
-            <ul>
-                <li>A) ${q.alterA}</li>
-                <li>B) ${q.alterB}</li>
-                <li>C) ${q.alterC}</li>
-                <li>D) ${q.alterD}</li>
-                <li>E) ${q.alterE}</li>
-            </ul><hr>
-        `;
-    });
-
-    document.getElementById("conteudoPreview").innerHTML = html;
-    document.getElementById("modalPreview").style.display = "block";
-});
-
 function fecharPreview() {
     document.getElementById("modalPreview").style.display = "none";
 }
 
-// ============================================
-// Gerar PDF
-// ============================================
-document.getElementById("btnGerarPdf").addEventListener("click", () => {
-    const cabecalho = document.getElementById("cabecalho").value;
-
-    const selecionadas = [...document.querySelectorAll(".selectQuestao:checked")]
-        .map(c => c.value);
-
-    if (selecionadas.length === 0) {
-        alert("Selecione pelo menos uma questão.");
-        return;
-    }
-
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = "/prova/gerar";
-
-    const cab = document.createElement("input");
-    cab.type = "hidden";
-    cab.name = "cabecalho";
-    cab.value = cabecalho;
-    form.appendChild(cab);
-
-    selecionadas.forEach(id => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = "questoesSelecionadas";
-        input.value = id;
-        form.appendChild(input);
-    });
-
-    document.body.appendChild(form);
-    form.submit();
-});
-
-// ============================================
-// Botão voltar
-// ============================================
-document.getElementById("btnVoltar").onclick = () => {
-    window.location.href = "/menu";
-};
 
 

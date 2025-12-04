@@ -16,6 +16,8 @@ public class ProfessorDTO {
 
     @NotBlank(message = "Preencha o campo!")
     private String senhaProfessor;
+    
+    private byte tipoProfessor;
 
     //IDs das disciplinas selecionadas no frontend
     private List<Integer> idsDisciplinas;
@@ -59,4 +61,14 @@ public class ProfessorDTO {
     public void setIdsDisciplinas(List<Integer> idsDisciplinas) {
         this.idsDisciplinas = idsDisciplinas;
     }
+
+	public byte getTipoProfessor() {
+		return tipoProfessor;
+	}
+
+	public void setTipoProfessor(byte tipoProfessor) {
+		this.tipoProfessor = tipoProfessor;
+	}
+    
+    
 }
