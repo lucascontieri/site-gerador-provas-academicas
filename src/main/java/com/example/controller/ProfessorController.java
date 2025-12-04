@@ -53,7 +53,7 @@ public class ProfessorController {
 		    }
 
 		    
-		  //Exclui a Disciplina pelo id dela
+		  //Exclui um Professor pelo seu id 
 		    @DeleteMapping("/excluir/{idProfessor}")
 		    public ResponseEntity<Void> excluir(@PathVariable int idProfessor) {
 		        Professor professor = professorService.GetByidProfessor(idProfessor);

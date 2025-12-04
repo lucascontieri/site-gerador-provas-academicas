@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>Menu do Professor</title>
 
-    <!-- CSS separado -->
+    <!-- CSS -->
     <link rel="stylesheet" href="/css/menu.css">
 
-    <!-- JS separado -->
+    <!-- JS -->
     <script src="/js/menu.js" defer></script>
 </head>
 <body>
@@ -18,11 +18,20 @@
 
     <h2>Suas disciplinas:</h2>
 
-	<ul>
-	    <li th:each="disciplina : ${disciplinas}">
-	        <span th:text="${disciplina.nomeDisciplina}"></span>
-	    </li>
-	</ul>
+    <ul>
+        <li th:each="disciplina : ${disciplinas}">
+            <span th:text="${disciplina.nomeDisciplina}"></span>
+        </li>
+    </ul>
+
+    <br>
+
+    <!-- Botão para abrir tela de Questões -->
+    <button onclick="window.location.href='/tela/questao'">
+        Gerenciar Questões
+    </button>
+
+    <br><br>
 
     <button onclick="logout()">Sair</button>
 

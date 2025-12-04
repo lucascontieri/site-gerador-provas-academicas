@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Questão</title>
+    <link rel="stylesheet" href="/css/questao.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Cadastrar Questão</h2>
+
+        <form id="formQuestao">
+            <label>Texto da Questão:</label>
+            <textarea id="textQuestao" required></textarea>
+
+            <label>Alternativa A:</label>
+            <input type="text" id="alterA" required>
+
+            <label>Alternativa B:</label>
+            <input type="text" id="alterB" required>
+
+            <label>Alternativa C:</label>
+            <input type="text" id="alterC" required>
+
+            <label>Alternativa D:</label>
+            <input type="text" id="alterD" required>
+
+            <label>Alternativa E:</label>
+            <input type="text" id="alterE" required>
+
+            <label>Resposta Correta (A–E):</label>
+            <input type="text" id="resposta" maxlength="1" required>
+
+            <label>Disciplina:</label>
+            <select id="selectDisciplina" required></select>
+
+            <div class="botoes">
+                <button type="submit" class="btn-salvar">Salvar Questão</button>
+                <button type="button" id="btnVoltar" class="btn-voltar">Voltar</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="/js/questao.js"></script>
+</body>
+</html>

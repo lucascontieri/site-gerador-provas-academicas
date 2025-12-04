@@ -21,7 +21,7 @@ public class LoginController {
 	 @Autowired
 	    private LoginService loginService;
 
-	 	//Verifica as credenciais do professor no banco de dados e ao realizar o login salva o idProfessor e idDisciplina na sessão
+	 	//Verifica as credenciais do professor no banco de dados e ao realizar o login salva o idProfessor e idsDisciplinas na sessão
 	    @PostMapping("/login")
 	    public String login(@RequestParam String matriProfessor,
 	                        @RequestParam String senhaProfessor,
