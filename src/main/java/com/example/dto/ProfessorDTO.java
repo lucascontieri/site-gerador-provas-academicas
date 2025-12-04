@@ -14,7 +14,6 @@ public class ProfessorDTO {
     @NotBlank(message = "Preencha o campo!")
     private String emailProfessor;
 
-    @NotBlank(message = "Preencha o campo!")
     private String senhaProfessor;
     
     private byte tipoProfessor;

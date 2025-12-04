@@ -36,11 +36,6 @@ public class PagesController {
         return "htmlLogin/login"; 
     }
 
-    @GetMapping("/tela/menu")
-    public String mostrarTelaMenu() {
-        return "htmlMenu/menu"; 
-    }
-
     @GetMapping("/tela/logout")
     public String logout(HttpSession session) {
         session.invalidate();
@@ -71,4 +66,10 @@ public class PagesController {
     public String mostrarTelaNovaSenha() {
         return "htmlRecuperarSenha/nova-senha"; 
     }
+    
+  //Direciona para tela de acesso negado
+  		@GetMapping("/tela/acesso-negado")
+  		public String mostrarTelaAcessoNegado() {
+  		    return "htmlAcessoNegado/acesso-negado";
+  		}
 }

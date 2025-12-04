@@ -1,6 +1,7 @@
 package com.example.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.model.Professor;
@@ -9,10 +10,13 @@ import com.example.repository.ProfessorRepository;
 @Service
 public class LoginService {
 
-	@Autowired
+    @Autowired
     private ProfessorRepository professorRepository;
 
-	//Metodo para autenticar o professor pela matricula e senha
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    // Método para autenticar o professor pela matricula e senha
     public Professor autenticar(String matriProfessor, String senhaProfessor) {
 
         Professor professor = professorRepository.findBymatriProfessor(matriProfessor);
@@ -21,7 +25,8 @@ public class LoginService {
             return null;
         }
 
-        if (!professor.getSenhaProfessor().equals(senhaProfessor)) {
+        // Compara a senha digitada com o hash armazenado no banco
+        if (!passwordEncoder.matches(senhaProfessor, professor.getSenhaProfessor())) {
             return null;
         }
 

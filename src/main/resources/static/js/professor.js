@@ -250,7 +250,6 @@ document.addEventListener("click", function (event) {
                 document.querySelector("#editIdProfessor").value = professor.idProfessor;
                 document.querySelector("#editNomeProfessor").value = professor.nomeProfessor;
                 document.querySelector("#editEmailProfessor").value = professor.emailProfessor;
-                document.querySelector("#editSenhaProfessor").value = professor.senhaProfessor;
                 document.querySelector("#editMatriProfessor").value = professor.matriProfessor;
                 document.querySelector("#editTipoProfessor").value = professor.tipoProfessor;
 
@@ -298,8 +297,7 @@ document.querySelector("#formEditarProfessor").addEventListener("submit", functi
 
     const dto = {
         nomeProfessor: document.querySelector("#editNomeProfessor").value,
-        emailProfessor: document.querySelector("#editEmailProfessor").value,
-        senhaProfessor: document.querySelector("#editSenhaProfessor").value,
+        emailProfessor: document.querySelector("#editEmailProfessor").value,      
         matriProfessor: document.querySelector("#editMatriProfessor").value,
         tipoProfessor: parseInt(document.querySelector("#editTipoProfessor").value),
         idsDisciplinas: idsDisciplinas
