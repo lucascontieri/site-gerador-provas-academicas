@@ -1,6 +1,7 @@
 package com.example.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,20 +54,22 @@ public class QuestaoService {
     }
 	
     //Atualiza a questao pelo seu ID
-    public java.util.Optional<Questao> AtualizarQuestao(int idQuestao, QuestaoDTO dto) {
-        return questaoRepository.findById(idQuestao)
-                .map(quest -> {
-                	quest.setIdDisciplina(dto.getIdDisciplina());
-            		quest.setIdProfessor(dto.getIdProfessor());
-            		quest.setTextQuestao(dto.getTextQuestao());
-            		quest.setAlterA(dto.getAlterA());
-            		quest.setAlterB(dto.getAlterB());
-            		quest.setAlterC(dto.getAlterC());
-            		quest.setAlterD(dto.getAlterD());
-            		quest.setAlterE(dto.getAlterE());
-            		quest.setResposta(dto.getResposta());
-                    return questaoRepository.save(quest);
-                });
+    public Optional<Questao> AtualizarQuestao(int idQuestao, QuestaoDTO dto) {
+        Optional<Questao> questaoOpt = questaoRepository.findById(idQuestao);
+        if (questaoOpt.isPresent()) {
+            Questao q = questaoOpt.get();
+            q.setTextQuestao(dto.getTextQuestao());
+            q.setAlterA(dto.getAlterA());
+            q.setAlterB(dto.getAlterB());
+            q.setAlterC(dto.getAlterC());
+            q.setAlterD(dto.getAlterD());
+            q.setAlterE(dto.getAlterE());
+            q.setResposta(dto.getResposta());
+
+            questaoRepository.save(q);
+            return Optional.of(q);
+        }
+        return Optional.empty();
     }
 	
 	

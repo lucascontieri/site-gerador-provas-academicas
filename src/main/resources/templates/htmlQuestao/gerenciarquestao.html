@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gerenciamento de Questões</title>
+    <link rel="stylesheet" th:href="@{/css/gerenciarquestao.css}">
+</head>
+<body>
+    <div class="container">
+        <h2>Gerenciamento de Questões</h2>
+		
+		<input type="text" id="filtroDisciplina" placeholder="Filtrar por disciplina..." class="filtro">
+		
+		<table id="tabelaQuestoes">
+		    <thead>
+		        <tr>
+		            <th>Disciplina</th>
+		            <th>Professor</th> <!-- Nova coluna -->
+		            <th>Texto da Questão</th>
+		            <th>Ações</th>
+		        </tr>
+		    </thead>
+		    <tbody>
+		        <!-- Questões carregadas via JS -->
+		    </tbody>
+		</table>
+
+      <button id="btnVoltar" class="voltar">Voltar</button>
+    </div>
+
+    <!-- Modal para exibir/editar questão -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="modalTitle">Questão</h3>
+            <div id="modalBody">
+                <!-- Conteúdo carregado via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/gerenciarquestao.js}"></script>
+</body>
+</html>

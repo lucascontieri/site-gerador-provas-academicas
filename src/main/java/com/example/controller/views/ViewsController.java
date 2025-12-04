@@ -41,10 +41,16 @@ public class ViewsController {
 	     return "redirect:/tela/login";
 	 }
 	 
-	 //Direciona para tela de Questao
-	 @GetMapping("/questao")
+	 //Direciona para tela de Cadastro de Questao
+	 @GetMapping("/cadastrar/questao")
 	    public String mostrarTelaQuestao() {
 	        return "htmlQuestao/questao"; 
 	    }
+	 
+	//Direciona para tela de Cadastro de Questao
+		 @GetMapping("/gerenciar/questao")
+		    public String mostrarTelaGerenciarQuestao() {
+		        return "htmlQuestao/gerenciarquestao"; 
+		    }
 	 
 }

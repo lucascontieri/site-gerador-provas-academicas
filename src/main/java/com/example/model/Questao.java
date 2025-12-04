@@ -2,9 +2,12 @@ package com.example.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Questao {
@@ -12,6 +15,11 @@ public class Questao {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idQuestao") //informa o nome real da coluna
 	private int idQuestao;
+	
+	@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "idDisciplina", insertable = false, updatable = false)
+    private Disciplina disciplina;
+	
 	private int idDisciplina;
 	private int idProfessor;
 	private String textQuestao;
@@ -40,6 +48,13 @@ public class Questao {
 		this.alterE = alterE;
 		this.resposta = resposta;
 	}
+	
+	public Disciplina getDisciplina() {
+        return disciplina;
+    }
+    public void setDisciplina(Disciplina disciplina) {
+        this.disciplina = disciplina;
+    }
 
 	public int getIdDisciplina() {
 		return idDisciplina;
