@@ -61,6 +61,49 @@ function salvarProfessor() {
 }
 
 // =============================
+// Excluir Professor
+// =============================
+document.addEventListener("click", function (event) {
+    if (event.target.classList.contains("btn-excluir")) {
+        const idProfessor = event.target.getAttribute("data-id");
+
+        // Exibe o prompt para digitar a senha
+        const senha = prompt("Digite a senha para confirmar a exclusão:");
+
+        // Se o usuário cancelar ou não digitar nada
+        if (senha === null || senha.trim() === "") {
+            alert("Exclusão cancelada. Senha não informada.");
+            return;
+        }
+
+        // Exemplo de senha fixa (você pode mudar para outro valor ou buscar dinamicamente)
+        const senhaCorreta = "fatecGRU2025@#";
+
+        if (senha !== senhaCorreta) {
+            alert("Senha incorreta! Exclusão não autorizada.");
+            return;
+        }
+
+        if (confirm("Tem certeza que deseja excluir este professor?")) {
+            fetch(`http://localhost:8080/professor/excluir/${idProfessor}`, {
+                method: "DELETE"
+            })
+            .then(res => {
+                if (res.ok) {
+                    alert("Professor excluído com sucesso!");
+                    listarProfessores(); // Atualiza a tabela
+                } else if (res.status === 404) {
+                    alert("Professor não encontrado!");
+                } else {
+                    alert("Erro ao excluir professor.");
+                }
+            })
+            .catch(err => console.error("Erro ao excluir:", err));
+        }
+    }
+});
+
+// =============================
 // Limpar Campos
 // =============================
 function limparCamposProfessor() {
@@ -113,6 +156,9 @@ filtroDisciplina.addEventListener("keyup", function () {
     }
 });
 
+// =============================
+// Listar Professores
+// =============================
 function listarProfessores() {
     fetch("http://localhost:8080/professor/list")
         .then(res => res.json())
@@ -144,6 +190,95 @@ function listarProfessores() {
         .catch(err => console.error("Erro ao listar professores:", err));
 }
 
+// =============================
+// Abrir modal de edição
+// =============================
+document.addEventListener("click", function (event) {
+    if (event.target.classList.contains("btn-editar")) {
+        const idProfessor = event.target.getAttribute("data-id");
+
+        // Busca os dados do professor
+        fetch(`http://localhost:8080/professor/${idProfessor}`)
+            .then(res => res.json())
+            .then(professor => {
+                // Preenche campos do professor
+                document.querySelector("#editIdProfessor").value = professor.idProfessor;
+                document.querySelector("#editNomeProfessor").value = professor.nomeProfessor;
+                document.querySelector("#editEmailProfessor").value = professor.emailProfessor;
+                document.querySelector("#editSenhaProfessor").value = professor.senhaProfessor;
+                document.querySelector("#editMatriProfessor").value = professor.matriProfessor;
+
+                // Buscar todas as disciplinas
+                fetch("http://localhost:8080/disciplina/list")
+                    .then(res => res.json())
+                    .then(disciplinas => {
+                        const container = document.querySelector("#editListaDisciplinas");
+                        container.innerHTML = "";
+
+                        disciplinas.forEach(d => {
+                            const checked = professor.disciplinas.some(pd => pd.idDisciplina === d.idDisciplina);
+                            const div = document.createElement("div");
+                            div.innerHTML = `
+                                <label>
+                                    <input type="checkbox" class="edit-check-disciplina" value="${d.idDisciplina}" ${checked ? "checked" : ""}>
+                                    ${d.nomeDisciplina}
+                                </label>
+                            `;
+                            container.appendChild(div);
+                        });
+
+                        // Exibe modal
+                        document.querySelector("#modalEditar").style.display = "flex";
+                    });
+            })
+            .catch(err => console.error("Erro ao buscar professor:", err));
+    }
+});
+
+// =============================
+// Fechar modal
+// =============================
+document.querySelector("#btnCancelar").addEventListener("click", function () {
+    document.querySelector("#modalEditar").style.display = "none";
+});
+
+// =============================
+// Atualizar Professor
+// =============================
+document.querySelector("#formEditarProfessor").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const id = document.querySelector("#editIdProfessor").value;
+
+    const idsDisciplinas = [...document.querySelectorAll(".edit-check-disciplina:checked")]
+        .map(c => parseInt(c.value));
+
+    const dto = {
+        nomeProfessor: document.querySelector("#editNomeProfessor").value,
+        emailProfessor: document.querySelector("#editEmailProfessor").value,
+        senhaProfessor: document.querySelector("#editSenhaProfessor").value,
+        matriProfessor: document.querySelector("#editMatriProfessor").value,
+        idsDisciplinas: idsDisciplinas
+    };
+
+    fetch(`http://localhost:8080/professor/atualizar/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dto)
+    })
+    .then(res => {
+        if (res.ok) {
+            alert("Professor atualizado com sucesso!");
+            document.querySelector("#modalEditar").style.display = "none";
+            listarProfessores();
+        } else {
+            alert("Erro ao atualizar professor.");
+        }
+    })
+    .catch(err => console.error("Erro:", err));
+});
 
 // Event Listeners
 formProfessor.addEventListener('submit', function(event) {

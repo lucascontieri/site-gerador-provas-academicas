@@ -1,7 +1,9 @@
 const disciplina = document.querySelector("form");
 const idDisciplina = document.querySelector(".disciplina");
 
-// Função criada para receber os dados do campo da pagina e converter em JSON
+// ============================
+// Função Salvar disciplina
+// ============================
 function salvar() {
 	// 1. Verifica se o campo está vazio
 	if(idDisciplina.value == ""){
@@ -19,7 +21,7 @@ function salvar() {
 				console.error("Erro na requisição de procura:", res.statusText);
 				throw new Error("Erro de servidor ao verificar disciplina."); 
 			}
-			// Assumimos que a API retorna true ou false com status 200
+			//API retorna true ou false com status 200
 			return res.json(); 
 		})
 		.then(existe => { // Recebe o booleano (true ou false) diretamente
@@ -61,7 +63,28 @@ function salvar() {
 		});
 };
 
-//Metodo para limpar o input da caixa de texto disciplina
+// ============================
+// FILTRO DE DISCIPLINAS
+// ============================
+const campoBusca = document.getElementById("campoBusca");
+
+campoBusca.addEventListener("input", function() {
+  const filtro = campoBusca.value.toLowerCase(); // converte para minúsculas
+  const linhas = document.querySelectorAll("#tableDisciplina tbody tr");
+
+  linhas.forEach(linha => {
+    const nomeDisciplina = linha.children[1].textContent.toLowerCase(); // pega o texto da 2ª coluna
+    if (nomeDisciplina.includes(filtro)) {
+      linha.style.display = ""; // mostra se corresponde
+    } else {
+      linha.style.display = "none"; // oculta se não corresponde
+    }
+  });
+});
+
+// ============================
+// Limpa o input de cadastro da disciplina
+// ============================
 function limpar(){
     // Use a variável 'idDisciplina' que já aponta para o input com a classe ".disciplina"
 	idDisciplina.value = ""; 
@@ -69,7 +92,9 @@ function limpar(){
     // Remova: caixatexto.value = "";
 }
 
-//FUNÇÃO PARA EXCLUIR DISCIPLINA
+// ============================
+// Função para excluir a disciplina
+// ============================
 function excluirDisciplina(id) { // <-- Recebe o ID correto aqui
 	if (!confirm(`Tem certeza que deseja excluir a disciplina com ID ${id}?`)) {
 		return; // Cancela se o usuário não confirmar
@@ -98,7 +123,10 @@ function excluirDisciplina(id) { // <-- Recebe o ID correto aqui
 
 
 const tabelaBody = document.querySelector("#tableDisciplina tbody"); 
-// Função para listar disciplinas e preencher a tabela
+
+// ============================
+// Função para listar as disciplinas na tabela
+// ============================
 function listarDisciplinas() {
 	fetch("http://localhost:8080/disciplina/list")
 		.then(res => res.json())

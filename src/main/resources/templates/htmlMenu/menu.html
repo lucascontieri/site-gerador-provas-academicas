@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu do Professor</title>
+
+    <!-- CSS separado -->
+    <link rel="stylesheet" href="/css/menu.css">
+
+    <!-- JS separado -->
+    <script src="/js/menu.js" defer></script>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Bem-vindo, <span th:text="${nomeProfessor}"></span>!</h1>
+
+    <h2>Suas disciplinas:</h2>
+
+	<ul>
+	    <li th:each="disciplina : ${disciplinas}">
+	        <span th:text="${disciplina.nomeDisciplina}"></span>
+	    </li>
+	</ul>
+
+    <button onclick="logout()">Sair</button>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Professor</title>
+    <link rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+
+    <div class="login-container">
+        <h2>Login do Professor</h2>
+
+        <!-- Exibe mensagem de erro -->
+        <div th:if="${erro}" class="erro-msg">
+            <p th:text="${erro}"></p>
+        </div>
+
+        <form action="/login" method="POST" id="loginForm">
+            <label for="matriProfessor">Matrícula:</label>
+            <input type="text" id="matriProfessor" name="matriProfessor" required>
+
+            <label for="senhaProfessor">Senha:</label>
+            <input type="password" id="senhaProfessor" name="senhaProfessor" required>
+
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+
+    <script src="/js/login.js"></script>
+
+</body>
+</html>

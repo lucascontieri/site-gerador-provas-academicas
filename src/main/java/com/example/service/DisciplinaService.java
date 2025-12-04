@@ -34,12 +34,12 @@ public class DisciplinaService {
 	
 	//Exclui a disciplina do banco de dados pelo id
     @Transactional
-    public void excluirDisciplina(int idDisciplina) { 
+    public void ExcluirDisciplina(int idDisciplina) { 
     	disciplinaRepository.deleteById(idDisciplina); 
     }
     
     //Utiliza o metodo existsBynomeDisciplina do repository para procurar a disciplina com base no nome que o metodo recebe
-    public boolean existsBynomeDisciplina(String nomeDisciplina) {
+    public boolean ExistsBynomeDisciplina(String nomeDisciplina) {
         return disciplinaRepository.existsBynomeDisciplina(nomeDisciplina);
     }
     

@@ -29,11 +29,21 @@ public class ProfessorController {
 	@Autowired
 	private com.example.service.ProfessorService professorService;
 	
-	//Lista todos os Professores cadastrados
+			//Lista todos os Professores cadastrados
 			@GetMapping("/list")
 		    public List<Professor> listar() {
 		        return professorService.ListarTodos();
 		    }
+			
+			//Busca o professor pelo ID
+			@GetMapping("/{id}")
+			public ResponseEntity<Professor> BuscarPorId(@PathVariable int id) {
+			    Professor professor = professorService.GetByidProfessor(id);
+			    if (professor != null) {
+			        return ResponseEntity.ok(professor);
+			    }
+			    return ResponseEntity.notFound().build();
+			}
 			
 			//Salva um novo Professor no banco de dados utilizando metodo salvarProfessor
 		    @PostMapping("/salvar")
@@ -46,18 +56,26 @@ public class ProfessorController {
 		  //Exclui a Disciplina pelo id dela
 		    @DeleteMapping("/excluir/{idProfessor}")
 		    public ResponseEntity<Void> excluir(@PathVariable int idProfessor) {
-		        professorService.excluirProfessor(idProfessor);
+		        Professor professor = professorService.GetByidProfessor(idProfessor);
+		        if (professor == null) {
+		            return ResponseEntity.notFound().build();
+		        }
+
+		        professorService.ExcluirProfessor(idProfessor);
 		        return ResponseEntity.noContent().build();
 		    }
 		    
 			
 		  //Atualiza os dados do professor no Banco de dados utilizando o id do Professor
 		    @PutMapping("/atualizar/{idProfessor}")
-		    public ResponseEntity<Professor> atualizar(@PathVariable int idProfessor,
-                    @Valid @RequestBody ProfessorDTO dto) {
-		    Optional<Professor> atualizado = professorService.atualizar(idProfessor, dto);
-		    return atualizado.map(ResponseEntity::ok)
-		    		.orElseGet(() -> ResponseEntity.notFound().build());
+		    public ResponseEntity<Professor> atualizar(
+		            @PathVariable int idProfessor,
+		            @Valid @RequestBody ProfessorDTO dto) {
+
+		        Optional<Professor> atualizado = professorService.AtualizarProfessor(idProfessor, dto);
+		        return atualizado
+		                .map(ResponseEntity::ok)
+		                .orElse(ResponseEntity.notFound().build());
 		    }
 			
 	

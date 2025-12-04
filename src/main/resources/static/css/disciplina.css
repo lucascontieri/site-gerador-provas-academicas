@@ -49,3 +49,27 @@ tr:nth-child(even){
 .btn-excluir:hover {
   background-color: #c9302c;
 }
+
+/* ============================= */
+/* FILTRO DE BUSCA DE DISCIPLINAS */
+/* ============================= */
+.filtro-container {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+#campoBusca {
+  width: 40%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+}
+
+#campoBusca:focus {
+  outline: none;
+  border-color: #4a90e2;
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.4);
+}

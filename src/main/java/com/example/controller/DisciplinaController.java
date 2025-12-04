@@ -42,7 +42,7 @@ public class DisciplinaController {
 	    //Exclui a Disciplina pelo id dela
 	    @DeleteMapping("/excluir/{idDisciplina}")
 	    public ResponseEntity<Void> excluir(@PathVariable int idDisciplina) {
-	        disciplinaService.excluirDisciplina(idDisciplina);
+	        disciplinaService.ExcluirDisciplina(idDisciplina);
 	        return ResponseEntity.noContent().build();
 	    }
 	    
@@ -50,7 +50,7 @@ public class DisciplinaController {
 	    @GetMapping("procura/{nomeDisciplina}")
 	    public ResponseEntity<Boolean> findBynomeDisciplina(@PathVariable String nomeDisciplina) {
 	        
-	        boolean existe = disciplinaService.existsBynomeDisciplina(nomeDisciplina);
+	        boolean existe = disciplinaService.ExistsBynomeDisciplina(nomeDisciplina);
 	        
 	        // Retorna o valor booleano (true ou false) com o status 200 OK
 	        return ResponseEntity.ok(existe); 

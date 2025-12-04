@@ -19,6 +19,7 @@
 </head>
 <body>
   
+<!-- FORMULÁRIO, campo para cadastrar a disciplina-->
   <div class="box">
     <h1>Cadastro de Disciplina</h1>
     <form action="">
@@ -29,6 +30,17 @@
   
   <div class="table">
     <h1>Lista de Disciplinas</h1>
+	
+	<!-- Campo de busca, campo para buscar as disciplinas -->
+	<div class="filtro-container">
+	    <input 
+	      type="text" 
+	      id="campoBusca" 
+	      placeholder="Digite para filtrar as disciplinas..."
+	    >
+	  </div>
+	  
+<!-- TABELA DE DISCIPLINAS, exibe as disciplinas cadastradas e um botão para excluir-->	  
     <table id="tableDisciplina">
       <thead>
         <tr>
