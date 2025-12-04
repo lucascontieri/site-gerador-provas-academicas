@@ -1,7 +1,3 @@
-// Redireciona para cadastrar questões
-document.getElementById("btnCadastrar").onclick = () => {
-    window.location.href = "/tela/cadastrar/questao";
-};
 //=====================================================================
 // Chama a API /gerenciar/questao e redireciona
 //=====================================================================
@@ -33,4 +29,20 @@ document.getElementById("btnGerarProva").onclick = () => {
 //=====================================================================
 document.getElementById("btnSair").onclick = () => {
     window.location.href = "/tela/logout";
+};
+// Redireciona para cadastrar questões
+document.getElementById("btnCadastrar").onclick = () => {
+    window.location.href = "/tela/cadastrar/questao";
+};
+// Redireciona para gerenciar coordenador
+document.getElementById("btnGerenciarCoordenador").onclick = () => {
+    window.location.href = "/tela/coordenador";
+};
+// Redireciona para gerenciar coordenador
+document.getElementById("btnGerenciarProfessor").onclick = () => {
+    window.location.href = "/tela/professor";
+};
+// Redireciona para gerenciar Disciplina
+document.getElementById("btnGerenciarDisciplina").onclick = () => {
+    window.location.href = "/tela/disciplina";
 };

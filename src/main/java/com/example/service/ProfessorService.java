@@ -28,6 +28,16 @@ public class ProfessorService {
     public List<Professor> ListarTodos() {
         return professorRepository.findAll();
     }
+    
+    //Busca o professor pela sua matricula
+    public Professor GetBymatriProfessor(String matriProfessor) {
+        return professorRepository.findBymatriProfessor(matriProfessor);
+    }
+    
+    //Busca o professor pela sua matricula
+    public Professor GetByidProfessor(int idProfessor) {
+        return professorRepository.findByIdProfessor(idProfessor);
+    }
 
     // Salvar novo professor + relacionamento
     @Transactional
@@ -63,16 +73,6 @@ public class ProfessorService {
 
         // Exclui o Professor
         professorRepository.deleteById(idProfessor);
-    }
-
-    //Busca o professor pela sua matricula
-    public Professor GetBymatriProfessor(String matriProfessor) {
-        return professorRepository.findBymatriProfessor(matriProfessor);
-    }
-    
-    //Busca o professor pela sua matricula
-    public Professor GetByidProfessor(int idProfessor) {
-        return professorRepository.findByIdProfessor(idProfessor);
     }
 
     //Atualiza o professor pelo seu idProfessor

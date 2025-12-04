@@ -290,3 +290,9 @@ document.addEventListener("DOMContentLoaded", () => {
     listarDisciplinas();
     listarProfessores();
 });
+// ==================================================
+// Botão Voltar
+// ==================================================
+document.getElementById("btnVoltar").addEventListener("click", () => {
+    window.location.href = "/menu";
+});

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Coordenador</title>
+
+    <link rel="stylesheet" th:href="@{/css/coordenador.css}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- FORMULÁRIO -->
+    <div class="box-form">
+        <h1>Cadastro de Novo Coordenador</h1>
+
+        <form id="formCoordenador">
+            <input type="text" id="nomeCoordenador" placeholder="Nome Completo" required>
+            <input type="email" id="emailCoordenador" placeholder="Email" required>
+            <input type="text" id="matriCoordenador" placeholder="Matrícula" required>
+            <input type="password" id="senhaCoordenador" placeholder="Senha" required>
+
+            <button type="submit">Salvar Coordenador</button>
+        </form>
+
+        <h2>Lista de Coordenadores</h2>
+
+        <div id="box-coordenadores">
+            <table id="tableCoordenador">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Matrícula</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<!-- MODAL -->
+<div id="modalEditar" class="modal">
+  <div class="modal-content">
+    <h2>Editar Coordenador</h2>
+    <form id="formEditarCoordenador">
+
+      <input type="hidden" id="editIdCoordenador">
+
+      <label>Nome:</label>
+      <input type="text" id="editNomeCoordenador" required>
+
+      <label>Email:</label>
+      <input type="email" id="editEmailCoordenador" required>
+
+      <label>Matrícula:</label>
+      <input type="text" id="editMatriCoordenador" required>
+
+      <label>Senha:</label>
+      <input type="password" id="editSenhaCoordenador" required>
+
+      <div class="modal-buttons">
+        <button type="submit" id="btnAtualizar">Atualizar</button>
+        <button type="button" id="btnCancelar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<button type="button" id="btnVoltar" class="btn-voltar">Voltar</button>
+
+<script th:src="@{/js/coordenador.js}"></script>
+
+</body>
+</html>
+

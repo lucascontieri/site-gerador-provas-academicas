@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.model.Coordenador;
 import com.example.model.Disciplina;
 import com.example.model.Professor;
 import com.example.service.LoginService;
@@ -22,31 +23,42 @@ public class LoginController {
 	    private LoginService loginService;
 
 	 	//Verifica as credenciais do professor no banco de dados e ao realizar o login salva o idProfessor e idsDisciplinas na sessão
-	    @PostMapping("/login")
-	    public String login(@RequestParam String matriProfessor,
-	                        @RequestParam String senhaProfessor,
-	                        HttpSession session,
-	                        Model model) {
+	 @PostMapping("/login")
+	 public String login(@RequestParam String matricula,
+	                     @RequestParam String senha,
+	                     HttpSession session,
+	                     Model model) {
 
-	        Professor professor = loginService.autenticar(matriProfessor, senhaProfessor);
+	     Object usuario = loginService.autenticar(matricula, senha);
 
-	        if (professor == null) {
-	            model.addAttribute("erro", "Matricula ou senha inválidos!");
-	            return "htmlLogin/login";
-	        }
+	     if (usuario == null) {
+	         model.addAttribute("erro", "Matrícula ou senha inválidos!");
+	         return "htmlLogin/login";
+	     }
 
-	        //Salva ID do professor na sessão
-	        session.setAttribute("idProfessor", professor.getIdProfessor());
+	     // Professor logado
+	     if (usuario instanceof Professor professor) {
 
-	        //Salva lista de IDs das disciplinas do professor
-	        List<Integer> idsDisciplinas = professor.getDisciplinas()
-	            .stream()
-	            .map(Disciplina::getIdDisciplina)
-	            .collect(Collectors.toList());
+	         session.setAttribute("tipoUsuario", "professor");
+	         session.setAttribute("idProfessor", professor.getIdProfessor());
 
-	        session.setAttribute("idsDisciplinas", idsDisciplinas);
+	         // Disciplinas do professor
+	         List<Integer> idsDisciplinas = professor.getDisciplinas()
+	                 .stream()
+	                 .map(Disciplina::getIdDisciplina)
+	                 .collect(Collectors.toList());
 
-	        // Redireciona para o menu
-	        return "redirect:/menu";
-	    }
+	         session.setAttribute("idsDisciplinas", idsDisciplinas);
+	     }
+
+	     // Coordenador logado
+	     else if (usuario instanceof Coordenador coordenador) {
+
+	         session.setAttribute("tipoUsuario", "coordenador");
+	         session.setAttribute("idCoordenador", coordenador.getIdCoordenador());
+	     }
+
+	     return "redirect:/menu";
+	 }
+
 }

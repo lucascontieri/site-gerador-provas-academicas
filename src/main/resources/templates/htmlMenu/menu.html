@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Menu do Professor</title>
+    <title>Menu</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="/css/menu.css">
@@ -14,23 +14,40 @@
 
 <div class="container">
 
-    <h1>Bem-vindo, <span th:text="${nomeProfessor}"></span>!</h1>
+    <h1>Bem-vindo, <span th:text="${nomeUsuario}"></span>!</h1>
 
-    <h2>Suas disciplinas:</h2>
+    <!-- Se for professor, mostra as disciplinas -->
+	<div th:if="${tipoUsuario == 'professor'}">
+	    <h2>Suas disciplinas:</h2>
+	    <ul>
+	        <li th:each="disciplina : ${disciplinas}">
+	            <span th:text="${disciplina.nomeDisciplina}"></span>
+	        </li>
+	    </ul>
+	</div>
 
-    <ul>
-        <li th:each="disciplina : ${disciplinas}">
-            <span th:text="${disciplina.nomeDisciplina}"></span>
-        </li>
-    </ul>
+	<div th:if="${tipoUsuario == 'professor'}">
+	    <button id="btnCadastrar">Cadastrar Questões</button>
+	    <button id="btnGerenciar">Gerenciar Questões</button>
+	    <button id="btnGerarProva">Gerar Prova</button>
+	</div>
 
-    <br>
+	<div th:if="${tipoUsuario == 'coordenador'}">
+	    <h2>Todas as Disciplinas:</h2>
+	    <ul>
+	        <li th:each="disciplina : ${disciplinas}">
+	            <span th:text="${disciplina.nomeDisciplina}"></span>
+	        </li>
+	    </ul>
 
-    <!-- Botão para abrir telas de Questões -->
-    <button id="btnCadastrar">Cadastrar Questões</button>
-    <button id="btnGerenciar">Gerenciar Questões</button>
-	<!-- Botão para abrir tela de gerar Prova -->
-	<button id="btnGerarProva">Gerar Prova</button>
+	    <button id="btnCadastrar">Cadastrar Questões</button>
+	    <button id="btnGerenciar">Gerenciar Questões</button>
+	    <button id="btnGerarProva">Gerar Prova</button>
+
+	    <button id="btnGerenciarCoordenador">Gerenciar Coordenador</button>
+	    <button id="btnGerenciarProfessor">Gerenciar Professor</button>
+	    <button id="btnGerenciarDisciplina">Gerenciar Disciplina</button>
+	</div>
 
     <br><br>
 

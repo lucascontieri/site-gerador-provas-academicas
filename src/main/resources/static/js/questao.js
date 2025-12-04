@@ -1,4 +1,6 @@
+// ============================
 // Carrega disciplinas ao abrir a página
+// ============================
 document.addEventListener("DOMContentLoaded", () => {
     carregarDisciplinas();
 });
