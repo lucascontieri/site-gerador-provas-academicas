@@ -32,16 +32,29 @@ public class ProfessorService {
     // Salvar novo professor + relacionamento
     @Transactional
     public Professor SalvarProfessor(ProfessorDTO dto) {
+
+        // Verifica duplicação de email
+        Professor emailExistente = professorRepository.findByemailProfessor(dto.getEmailProfessor());
+        if (emailExistente != null) {
+            throw new RuntimeException("Já existe um professor cadastrado com este email.");
+        }
+
+        // Verifica duplicação de matrícula
+        Professor matriExistente = professorRepository.findBymatriProfessor(dto.getMatriProfessor());
+        if (matriExistente != null) {
+            throw new RuntimeException("Já existe um professor cadastrado com esta matrícula.");
+        }
+
+        // Se não existir duplicação → cria o professor normalmente
         Professor pro = new Professor();
         pro.setNomeProfessor(dto.getNomeProfessor());
         pro.setMatriProfessor(dto.getMatriProfessor());
         pro.setSenhaProfessor(dto.getSenhaProfessor());
         pro.setEmailProfessor(dto.getEmailProfessor());
         pro.setTipoProfessor(dto.getTipoProfessor());
-        // Salva professor primeiro
+
         pro = professorRepository.save(pro);
 
-        // Depois associa disciplinas
         if (dto.getIdsDisciplinas() != null && !dto.getIdsDisciplinas().isEmpty()) {
             List<Disciplina> disciplinas = disciplinaRepository.findAllById(dto.getIdsDisciplinas());
             pro.setDisciplinas(disciplinas);
@@ -50,6 +63,7 @@ public class ProfessorService {
 
         return pro;
     }
+
     
     //Exclui o professor pelo seu idProfessor
     @Transactional
@@ -68,6 +82,11 @@ public class ProfessorService {
     //Busca o professor pela sua matricula
     public Professor GetBymatriProfessor(String matriProfessor) {
         return professorRepository.findBymatriProfessor(matriProfessor);
+    }
+    
+  //Busca o professor pela seu email
+    public Professor GetByemailProfessor(String emailProfessor) {
+        return professorRepository.findByemailProfessor(emailProfessor);
     }
     
     //Busca o professor pela sua matricula

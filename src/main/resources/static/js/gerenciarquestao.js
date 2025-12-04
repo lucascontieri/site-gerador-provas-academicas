@@ -35,6 +35,7 @@ async function getDisciplinasProfessor() {
 
 //=====================================================================
 // Carrega todas as questões (filtradas pelas disciplinas do professor)
+// e renderiza a tabela com o novo design
 //=====================================================================
 async function carregarTabela() {
     const tbody = document.querySelector("#tabelaQuestoes tbody");
@@ -59,10 +60,12 @@ async function carregarTabela() {
 
                 const tdDisciplina = document.createElement("td");
                 tdDisciplina.textContent = q.disciplina?.nomeDisciplina || "N/A";
+                tdDisciplina.setAttribute("data-label", "Disciplina:"); // Adicionado para responsividade
                 tr.appendChild(tdDisciplina);
 
                 const tdProfessor = document.createElement("td");
                 tdProfessor.textContent = q.nomeProfessor || "N/A";
+                tdProfessor.setAttribute("data-label", "Professor:"); // Adicionado para responsividade
                 tr.appendChild(tdProfessor);
 
                 const tdTexto = document.createElement("td");
@@ -70,26 +73,31 @@ async function carregarTabela() {
                     q.textQuestao.length > 50
                         ? q.textQuestao.substring(0, 50) + "..."
                         : q.textQuestao;
+                tdTexto.setAttribute("data-label", "Texto da Questão:"); // Adicionado para responsividade
                 tr.appendChild(tdTexto);
 
                 const tdAcoes = document.createElement("td");
+                tdAcoes.setAttribute("data-label", "Ações:"); // Adicionado para responsividade
 
+                // Botão Exibir
                 const btnView = document.createElement("button");
                 btnView.textContent = "Exibir";
-                btnView.classList.add("view");
+                btnView.classList.add("action-btn", "view"); // Adicionado action-btn e view
                 btnView.onclick = () => abrirModal(q, false);
                 tdAcoes.appendChild(btnView);
 
                 if (idProfessorLogado === q.idProfessor) {
+                    // Botão Editar
                     const btnEdit = document.createElement("button");
                     btnEdit.textContent = "Editar";
-                    btnEdit.classList.add("edit");
+                    btnEdit.classList.add("action-btn", "edit"); // Adicionado action-btn e edit
                     btnEdit.onclick = () => abrirModal(q, true);
                     tdAcoes.appendChild(btnEdit);
 
+                    // Botão Excluir
                     const btnDelete = document.createElement("button");
                     btnDelete.textContent = "Excluir";
-                    btnDelete.classList.add("delete");
+                    btnDelete.classList.add("action-btn", "delete"); // Adicionado action-btn e delete
                     btnDelete.onclick = () => excluirQuestao(q.idQuestao);
                     tdAcoes.appendChild(btnDelete);
                 }
@@ -114,6 +122,7 @@ function abrirModal(questao, editar) {
     modalTitle.textContent = editar ? "Editar Questão" : "Visualizar Questão";
 
     if (editar) {
+        // Modo Edição com campos editáveis
         modalBody.innerHTML = `
             <label>Disciplina:</label>
             <input type="text" value="${questao.disciplina?.nomeDisciplina || ''}" readonly>
@@ -130,14 +139,15 @@ function abrirModal(questao, editar) {
             <input type="text" id="alterD" value="${questao.alterD}">
             <label>Alternativa E:</label>
             <input type="text" id="alterE" value="${questao.alterE}">
-            <label>Resposta:</label>
+            <label>Resposta (A, B, C, D ou E):</label>
             <input type="text" id="resposta" value="${questao.resposta}">
             <button id="salvarBtn">Salvar</button>
-            <p id="msgSucesso" style="color:green; display:none;">Questão atualizada com sucesso!</p>
+            <p id="msgSucesso" style="color:green; display:none;">✅ Questão atualizada com sucesso!</p>
         `;
         document.getElementById("salvarBtn").onclick = () =>
-            salvarQuestao(questao.idQuestao, questao.idDisciplina);
+            salvarQuestao(questao.idQuestao, questao.disciplina.idDisciplina);
     } else {
+        // Modo Visualização (somente leitura)
         modalBody.innerHTML = `
             <form>
                 <label>Disciplina:</label>
@@ -185,7 +195,7 @@ async function salvarQuestao(idQuestao, idDisciplina) {
         alterC: document.getElementById("alterC").value,
         alterD: document.getElementById("alterD").value,
         alterE: document.getElementById("alterE").value,
-        resposta: document.getElementById("resposta").value,
+        resposta: document.getElementById("resposta").value.toUpperCase(), // Garante que a resposta esteja em caixa alta
         idDisciplina: idDisciplina
     };
 
@@ -201,7 +211,7 @@ async function salvarQuestao(idQuestao, idDisciplina) {
             setTimeout(() => {
                 document.getElementById("modal").style.display = "none";
                 carregarTabela();
-            }, 1500);
+            }, 1500); // Fecha o modal e recarrega a tabela após 1.5s
         } else {
             console.error("Erro ao atualizar questão:", response.status);
         }
@@ -214,10 +224,14 @@ async function salvarQuestao(idQuestao, idDisciplina) {
 // Excluir questão
 //=====================================================================
 async function excluirQuestao(idQuestao) {
-    if (!confirm("Deseja realmente excluir esta questão?")) return;
+    if (!confirm("Deseja realmente excluir esta questão? Esta ação é irreversível.")) return;
     try {
-        await fetch(`${API_BASE}/excluir/${idQuestao}`, { method: "DELETE" });
-        carregarTabela();
+        const resp = await fetch(`${API_BASE}/excluir/${idQuestao}`, { method: "DELETE" });
+        if (resp.ok) {
+             carregarTabela();
+        } else {
+            console.error("Erro ao excluir questão:", resp.status);
+        }
     } catch (error) {
         console.error("Erro ao excluir questão:", error);
     }
@@ -239,8 +253,3 @@ document.getElementById("filtroDisciplina").addEventListener("input", () => carr
 // Inicializa tabela
 //=====================================================================
 carregarTabela();
-
-
-
-
-

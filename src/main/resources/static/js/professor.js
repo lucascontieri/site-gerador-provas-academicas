@@ -77,12 +77,12 @@ function enviarProfessor(professorDTO) {
     })
     .then(res => {
         if (res.ok) return res.json(); 
-        if (res.status === 400) {
-            return res.json().then(errorData => {
-                alert("Erro de validação: " + (errorData.message || res.statusText));
-                throw new Error("Erro de validação.");
-            });
-        }
+		if (res.status === 400) {
+		    return res.text().then(msg => {
+		        alert(msg);  // Mostra mensagem enviada pelo backend
+		        throw new Error("Erro de validação.");
+		    });
+		}
         alert("Erro ao salvar professor.");
         throw new Error("Falha na requisição.");
     })
@@ -170,7 +170,7 @@ function listarDisciplinas() {
 }
 
 // =============================
-// Filtro da Tabela — Letra por letra
+// Filtro da Tabela Disciplinas — Letra por letra
 // =============================
 const filtroDisciplina = document.getElementById("filtroDisciplina");
 
@@ -188,6 +188,24 @@ filtroDisciplina.addEventListener("keyup", function () {
 });
 
 // =============================
+// Filtro da Tabela de Professores — por matrícula
+// =============================
+const filtroProfessor = document.getElementById("filtroProfessor");
+
+filtroProfessor.addEventListener("keyup", function () {
+    const texto = filtroProfessor.value.toLowerCase();
+    const linhas = document.querySelector("#tableProfessor tbody").getElementsByTagName("tr");
+
+    for (let i = 0; i < linhas.length; i++) {
+        const colunaMatricula = linhas[i].getElementsByTagName("td")[2]; // Coluna matrícula
+        if (colunaMatricula) {
+            const matricula = colunaMatricula.textContent.toLowerCase();
+            linhas[i].style.display = matricula.includes(texto) ? "" : "none";
+        }
+    }
+});
+
+// =============================
 // Listar Professores
 // =============================
 function listarProfessores() {
@@ -198,18 +216,14 @@ function listarProfessores() {
             tbody.innerHTML = "";
 
             professores.forEach(p => {
-                const nomesDisciplinas = (p.disciplinas || [])
-                    .map(d => d.nomeDisciplina)
-                    .join(", ");
-
+                // Substitui a coluna de disciplinas pelo email
                 const tipoTexto = p.tipoProfessor === 1 ? "Coordenador" : "Professor";
 
                 const linha = document.createElement("tr");
                 linha.innerHTML = `
                     <td>${p.idProfessor}</td>
                     <td>${p.nomeProfessor}</td>
-                    <td>${p.matriProfessor}</td>
-                    <td>${nomesDisciplinas || "-"}</td>
+                    <td>${p.matriProfessor}</td>                 
                     <td>${tipoTexto}</td>
                     <td>
                         <button class="btn-editar" data-id="${p.idProfessor}">Editar</button>
@@ -221,6 +235,7 @@ function listarProfessores() {
         })
         .catch(err => console.error("Erro ao listar professores:", err));
 }
+
 
 // =============================
 // Abrir modal de edição

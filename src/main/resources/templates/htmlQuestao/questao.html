@@ -3,43 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <title>Cadastrar Questão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="/css/questao.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Cadastrar Questão</h2>
 
-        <form id="formQuestao">
-            <label>Texto da Questão:</label>
-            <textarea id="textQuestao" required></textarea>
+    <div class="bg-animado"></div>
 
-            <label>Alternativa A:</label>
-            <input type="text" id="alterA" required>
+    <main class="dashboard-container">
+		<section class="dashboard-card glass">
+            
+            <header class="form-header">
+                <h2 class="titulo-principal">Cadastrar Nova Questão</h2>
+                <p class="subtitulo">Preencha os campos abaixo para adicionar uma questão de múltipla escolha ao banco de dados.</p>
+            </header>
 
-            <label>Alternativa B:</label>
-            <input type="text" id="alterB" required>
+            <form id="formQuestao">
+                
+                <div class="input-group">
+                    <label for="textQuestao" class="input-label">Texto da Questão:</label>
+                    <textarea id="textQuestao" class="input-field textarea-field" rows="5" placeholder="Digite o enunciado completo da questão..." required></textarea>
+                </div>
 
-            <label>Alternativa C:</label>
-            <input type="text" id="alterC" required>
+                <div class="alternativas-wrapper">
+                    <h3 class="section-title">Alternativas</h3>
+                    
+                    <div class="alternativa-group">
+                        <label for="alterA" class="alt-label">A:</label>
+                        <input type="text" id="alterA" class="input-field alt-input" placeholder="Alternativa A" required>
+                    </div>
 
-            <label>Alternativa D:</label>
-            <input type="text" id="alterD" required>
+                    <div class="alternativa-group">
+                        <label for="alterB" class="alt-label">B:</label>
+                        <input type="text" id="alterB" class="input-field alt-input" placeholder="Alternativa B" required>
+                    </div>
 
-            <label>Alternativa E:</label>
-            <input type="text" id="alterE" required>
+                    <div class="alternativa-group">
+                        <label for="alterC" class="alt-label">C:</label>
+                        <input type="text" id="alterC" class="input-field alt-input" placeholder="Alternativa C" required>
+                    </div>
 
-            <label>Resposta Correta (A–E):</label>
-            <input type="text" id="resposta" maxlength="1" required>
+                    <div class="alternativa-group">
+                        <label for="alterD" class="alt-label">D:</label>
+                        <input type="text" id="alterD" class="input-field alt-input" placeholder="Alternativa D" required>
+                    </div>
 
-            <label>Disciplina:</label>
-            <select id="selectDisciplina" required></select>
+                    <div class="alternativa-group">
+                        <label for="alterE" class="alt-label">E:</label>
+                        <input type="text" id="alterE" class="input-field alt-input" placeholder="Alternativa E" required>
+                    </div>
+                </div>
+                
+                <div class="meta-data-group">
+                    
+                    <div class="input-group">
+                        <label for="resposta" class="input-label">Resposta Correta (A–E):</label>
+                        <input type="text" id="resposta" class="input-field resposta-field" maxlength="1" placeholder="Ex: B" required>
+                    </div>
 
-            <div class="botoes">
-                <button type="submit" class="btn-salvar">Salvar Questão</button>
-                <button type="button" id="btnVoltar" class="btn-voltar">Voltar</button>
-            </div>
-        </form>
-    </div>
+                    <div class="input-group">
+                        <label for="selectDisciplina" class="input-label">Disciplina:</label>
+                        <select id="selectDisciplina" class="input-field select-field" required>
+                            <option value="" disabled selected>Selecione a disciplina</option>
+                            </select>
+                    </div>
+                </div>
+
+                <div class="botoes-area">
+                    <button type="submit" class="btn primario btn-salvar">
+                        <span class="btn-icon"></span> Salvar Questão
+                    </button>
+                    <button type="button" id="btnVoltar" class="btn secundario btn-voltar">
+                        <span class="btn-icon"></span> Voltar ao Menu
+                    </button>
+                </div>
+            </form>
+		</section>
+	</main>
 
     <script src="/js/questao.js"></script>
 </body>

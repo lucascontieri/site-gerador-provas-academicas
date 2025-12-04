@@ -22,11 +22,17 @@ public class Questao {
 	
 	private int idDisciplina;
 	private int idProfessor;
+	@Column(length = 2000) // <-- define o tamanho para 2000
 	private String textQuestao;
+	 @Column(length = 2000) // <-- define o tamanho para 2000
 	private String alterA;
+	 @Column(length = 2000) // <-- define o tamanho para 2000
 	private String alterB;
+	 @Column(length = 2000) // <-- define o tamanho para 2000
 	private String alterC;
+	 @Column(length = 2000) // <-- define o tamanho para 2000
 	private String alterD;
+	 @Column(length = 2000) // <-- define o tamanho para 2000
 	private String alterE;
 	private String resposta;
 	

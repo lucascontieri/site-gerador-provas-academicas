@@ -46,11 +46,18 @@ public class ProfessorController {
 			}
 			
 			//Salva um novo Professor no banco de dados utilizando metodo salvarProfessor
-		    @PostMapping("/salvar")
-		    public ResponseEntity<Professor> criar(@Valid @RequestBody ProfessorDTO dto) {
-		        Professor pro = professorService.SalvarProfessor(dto);
-		        return ResponseEntity.status(201).body(pro);
-		    }
+			@PostMapping("/salvar")
+			public ResponseEntity<?> criar(@Valid @RequestBody ProfessorDTO dto) {
+			    try {
+			        Professor pro = professorService.SalvarProfessor(dto);
+			        return ResponseEntity.status(201).body(pro);
+
+			    } catch (RuntimeException e) {
+			        return ResponseEntity
+			                .badRequest()
+			                .body(e.getMessage());
+			    }
+			}
 
 		    
 		  //Exclui um Professor pelo seu id 

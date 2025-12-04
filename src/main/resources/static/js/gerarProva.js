@@ -56,12 +56,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         filtradas.forEach(q => {
             const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td><input type="checkbox" class="selectQuestao" value="${q.idQuestao}"></td>
-                <td>${q.textQuestao}</td>
-                <td>${q.disciplina?.nomeDisciplina || ""}</td>
-                <td><button onclick="visualizarQuestao(${q.idQuestao})">Ver</button></td>
-            `;
+			const textoCortado = q.textQuestao.length > 50 
+			    ? q.textQuestao.substring(0, 50) + "..." 
+			    : q.textQuestao;
+
+			tr.innerHTML = `
+			    <td><input type="checkbox" class="selectQuestao" value="${q.idQuestao}"></td>
+			    <td title="${q.textQuestao}">${textoCortado}</td> <!-- title mostra o texto completo ao passar o mouse -->
+			    <td>${q.disciplina?.nomeDisciplina || ""}</td>
+			    <td><button onclick="visualizarQuestao(${q.idQuestao})">Ver</button></td>
+			`;
             tbody.appendChild(tr);
         });
     }

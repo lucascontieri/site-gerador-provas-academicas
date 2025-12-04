@@ -1,44 +1,83 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Menu do Professor</title>
+	<meta charset="UTF-8">
+	<title>Menu do Professor</title>
 
-    <!-- CSS -->
-    <link rel="stylesheet" href="/css/menu.css">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    <!-- JS -->
-    <script src="/js/menu.js" defer></script>
+	<link rel="stylesheet" href="/css/menu.css">
+
+	<script src="/js/menu.js" defer></script>
 </head>
+
 <body>
 
-<div class="container">
+	<div class="bg-animado"></div>
 
-    <h1>Bem-vindo, <span th:text="${nomeProfessor}"></span>!</h1>
+	<main class="dashboard-container">
 
-    <h2>Suas disciplinas:</h2>
+		<section class="dashboard-card glass">
 
-    <ul>
-        <li th:each="disciplina : ${disciplinas}">
-            <span th:text="${disciplina.nomeDisciplina}"></span>
-        </li>
-    </ul>
+			<header class="menu-header">
+				<h1 class="titulo">Olá, <span th:text="${nomeProfessor}">Nome do Professor</span></h1>
+				<p class="subtitulo">Selecione uma opção abaixo para navegar pelas ferramentas.</p>
+			</header>
 
-    <br>
+			<div class="disciplinas-wrapper">
+				<h2 class="section-title">Suas Disciplinas Ativas</h2>
 
-    <!-- Botões disponíveis para TODOS os professores -->
-    <button id="btnCadastrar">Cadastrar Questões</button>
-    <button id="btnGerenciar">Gerenciar Questões</button>
-    <button id="btnGerarProva">Gerar Prova</button>
-	<button id="btnSair">Sair</button>
-	
-    <!-- Botões disponíveis apenas para Coordenador -->
-    <button id="btnGerenciarProfessor" th:if="${session.tipoProfessor == 1}">Gerenciar Professor</button>
-    <button id="btnGerenciarDisciplina" th:if="${session.tipoProfessor == 1}">Gerenciar Disciplina</button>
+				<ul class="disciplinas-lista">
+					<li class="disciplina-item" th:each="disciplina : ${disciplinas}">
+						<span th:text="${disciplina.nomeDisciplina}">Disciplina Exemplo</span>
+					</li>
+				</ul>
+			</div>
 
-    <br><br>
+			<div class="menu-opcoes">
 
-</div>
+				<div class="opcao-card" id="btnCadastrar">
+					<span class="icone-opcao"></span> <h3 class="titulo-opcao">Cadastrar Questões</h3>
+					<p class="descricao-opcao">Adicione novas questões ao banco de dados.</p>
+				</div>
+
+				<div class="opcao-card" id="btnGerenciar">
+					<span class="icone-opcao"></span> <h3 class="titulo-opcao">Gerenciar Questões</h3>
+					<p class="descricao-opcao">Edite, visualize ou remova questões existentes.</p>
+				</div>
+
+				<div class="opcao-card" id="btnGerarProva">
+					<span class="icone-opcao"></span> <h3 class="titulo-opcao">Gerar Prova</h3>
+					<p class="descricao-opcao">Crie e exporte avaliações automaticamente.</p>
+				</div>
+
+				<th:block th:if="${session.tipoProfessor == 1}">
+					
+					<div class="opcao-card admin-card" id="btnGerenciarProfessor">
+						<span class="icone-opcao"></span> <h3 class="titulo-opcao">Gerenciar Professor</h3>
+						<p class="descricao-opcao">Controle de acesso e cadastro de docentes.</p>
+					</div>
+
+					<div class="opcao-card admin-card" id="btnGerenciarDisciplina">
+						<span class="icone-opcao"></span> <h3 class="titulo-opcao">Gerenciar Disciplina</h3>
+						<p class="descricao-opcao">Adicione e edite o catálogo de matérias.</p>
+					</div>
+					
+				</th:block>
+
+			</div>
+			
+			<div class="btn-sair">
+				<button id="btnSair" class="btn danger">
+					Sair do Sistema
+				</button>
+			</div>
+
+		</section>
+
+	</main>
 
 </body>
+
 </html>
