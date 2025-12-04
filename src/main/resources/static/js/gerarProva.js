@@ -1,0 +1,184 @@
+document.addEventListener("DOMContentLoaded", () => {
+
+    const tbody = document.querySelector("#tabelaQuestoes tbody");
+    const filtroInput = document.getElementById("filtroDisciplina");
+
+    let disciplinasPermitidas = [];
+    let questoes = [];
+
+    // ============================================
+    // Função para carregar disciplinas do professor
+    // ============================================
+    async function carregarDisciplinas() {
+        try {
+            const response = await fetch("/questao/carregarDisciplinas");
+            disciplinasPermitidas = await response.json();
+            disciplinasPermitidas = disciplinasPermitidas.map(d => d.nomeDisciplina.toLowerCase());
+        } catch (error) {
+            console.error("Erro ao carregar disciplinas:", error);
+        }
+    }
+
+    // ============================================
+    // Função para carregar todas as questões
+    // ============================================
+    async function carregarQuestoes() {
+        try {
+            const response = await fetch("/questao/list");
+            questoes = await response.json();
+            renderTabela();
+        } catch (error) {
+            console.error("Erro ao carregar questões:", error);
+        }
+    }
+
+    // ============================================
+    // Função para renderizar a tabela
+    // ============================================
+    function renderTabela(filtro = "") {
+        tbody.innerHTML = "";
+        const filtroLower = filtro.toLowerCase();
+
+        const filtradas = questoes.filter(q => {
+            const disc = q.disciplina?.nomeDisciplina?.toLowerCase() || "";
+            return disciplinasPermitidas.includes(disc) && disc.includes(filtroLower);
+        });
+
+        filtradas.forEach(q => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td><input type="checkbox" class="selectQuestao" value="${q.idQuestao}"></td>
+                <td>${q.textQuestao}</td>
+                <td>${q.disciplina?.nomeDisciplina || ""}</td>
+                <td><button onclick="visualizarQuestao(${q.idQuestao})">Ver</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    filtroInput.addEventListener("input", e => renderTabela(e.target.value));
+
+    // ============================================
+    // Inicialização
+    // ============================================
+    (async () => {
+        await carregarDisciplinas();
+        await carregarQuestoes();
+    })();
+
+});
+
+// ============================================
+// Função para visualizar questão no modal
+// ============================================
+async function visualizarQuestao(id) {
+    try {
+        const response = await fetch(`/questao/${id}`);
+        if (!response.ok) throw new Error("Questão não encontrada");
+        const q = await response.json();
+
+        document.getElementById("conteudoModal").innerHTML = `
+            <h4>${q.textQuestao}</h4>
+            <ul>
+                <li>A) ${q.alterA}</li>
+                <li>B) ${q.alterB}</li>
+                <li>C) ${q.alterC}</li>
+                <li>D) ${q.alterD}</li>
+                <li>E) ${q.alterE}</li>
+            </ul>
+        `;
+        document.getElementById("modalVisualizar").style.display = "block";
+    } catch (error) {
+        console.error("Erro ao buscar questão:", error);
+        alert("Não foi possível carregar a questão.");
+    }
+}
+
+function fecharModal() {
+    document.getElementById("modalVisualizar").style.display = "none";
+}
+
+// ============================================
+// Pré-visualizar prova
+// ============================================
+document.getElementById("btnPreview").addEventListener("click", () => {
+
+    const cabecalho = document.getElementById("cabecalho").value;
+
+    const selecionadas = [...document.querySelectorAll(".selectQuestao:checked")]
+        .map(c => Number(c.value));
+
+    if (selecionadas.length === 0) {
+        alert("Selecione pelo menos uma questão.");
+        return;
+    }
+
+    const escolhidas = selecionadas.map(id => questoes.find(q => q.idQuestao === id));
+
+    let html = `<h3>Cabeçalho</h3><p>${cabecalho}</p><hr><h3>Questões</h3>`;
+
+    escolhidas.forEach((q, i) => {
+        html += `
+            <p><b>${i + 1}) ${q.textQuestao}</b></p>
+            <ul>
+                <li>A) ${q.alterA}</li>
+                <li>B) ${q.alterB}</li>
+                <li>C) ${q.alterC}</li>
+                <li>D) ${q.alterD}</li>
+                <li>E) ${q.alterE}</li>
+            </ul><hr>
+        `;
+    });
+
+    document.getElementById("conteudoPreview").innerHTML = html;
+    document.getElementById("modalPreview").style.display = "block";
+});
+
+function fecharPreview() {
+    document.getElementById("modalPreview").style.display = "none";
+}
+
+// ============================================
+// Gerar PDF
+// ============================================
+document.getElementById("btnGerarPdf").addEventListener("click", () => {
+    const cabecalho = document.getElementById("cabecalho").value;
+
+    const selecionadas = [...document.querySelectorAll(".selectQuestao:checked")]
+        .map(c => c.value);
+
+    if (selecionadas.length === 0) {
+        alert("Selecione pelo menos uma questão.");
+        return;
+    }
+
+    const form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/prova/gerar";
+
+    const cab = document.createElement("input");
+    cab.type = "hidden";
+    cab.name = "cabecalho";
+    cab.value = cabecalho;
+    form.appendChild(cab);
+
+    selecionadas.forEach(id => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = "questoesSelecionadas";
+        input.value = id;
+        form.appendChild(input);
+    });
+
+    document.body.appendChild(form);
+    form.submit();
+});
+
+// ============================================
+// Botão voltar
+// ============================================
+document.getElementById("btnVoltar").onclick = () => {
+    window.location.href = "/menu";
+};
+
+

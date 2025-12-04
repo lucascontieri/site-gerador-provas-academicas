@@ -22,6 +22,13 @@ document.getElementById("btnGerenciar").onclick = async () => {
 };
 
 //=====================================================================
+// Redireciona para gerar Prova
+//=====================================================================
+document.getElementById("btnGerarProva").onclick = () => {
+    window.location.href = "/tela/prova";
+};
+
+//=====================================================================
 //Botao para voltar ao Login
 //=====================================================================
 document.getElementById("btnSair").onclick = () => {

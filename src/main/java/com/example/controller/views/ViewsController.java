@@ -47,10 +47,18 @@ public class ViewsController {
 	        return "htmlQuestao/questao"; 
 	    }
 	 
-	//Direciona para tela de Cadastro de Questao
-		 @GetMapping("/gerenciar/questao")
-		    public String mostrarTelaGerenciarQuestao() {
-		        return "htmlQuestao/gerenciarquestao"; 
-		    }
+	//Direciona para tela de gerenciamento de Questao
+	@GetMapping("/gerenciar/questao")
+		public String mostrarTelaGerenciarQuestao() {
+		     return "htmlQuestao/gerenciarquestao"; 
+		}
+	
+	//Direciona para tela de gerar prova
+		@GetMapping("/prova")
+			public String mostrarTelaProva() {
+			     return "htmlGerarProva/gerarProva"; 
+			}
+	
+	
 	 
 }
