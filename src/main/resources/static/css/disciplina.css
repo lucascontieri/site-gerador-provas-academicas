@@ -1,0 +1,21 @@
+body{
+  background-color:green;
+}
+h1{
+  margin-top:30px;
+  margin-bottom:30px;
+}
+.box, form{
+  gap:5px;
+  display: flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+
+input{
+  width:200px;
+  height:25px;
+  border-radius:20px;
+  padding:0 10px 0 10px;
+}
